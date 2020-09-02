@@ -1,0 +1,80 @@
+package clientConnection;
+
+import java.util.Scanner;
+
+import packets.AddConnectionPacket;
+import packets.SettingPacket;
+
+public class Main {
+
+	public static void main(String[] args) {
+//		Client client = new Client("localhost", 8080);
+//		client.connect();
+//
+//		AddConnectionPacket packet = new AddConnectionPacket();
+//		client.sendObject(packet);
+
+		tempMenu();
+	}
+
+	public static void tempMenu() {
+		Scanner sc = new Scanner(System.in);
+
+		do {
+			System.out.println("Welcome to the Multiplayer pacman game!");
+			System.out.println("---------------------------------------");
+			System.out.println("Please select a menu option:");
+			System.out.println("1. Create a game room");
+			System.out.println("2. Join a game");
+			System.out.println("---------------------------------------");
+			System.out.print("Enter a menu number: ");
+
+			if (!sc.hasNextInt()) {
+				System.out.println("Error: Menu option enterred is not a number. Please enter a menu number.");
+				System.out.println();
+				sc.next();
+				continue;
+			}
+			int opt = sc.nextInt();
+
+			do {
+				if (opt == 1) {
+					System.out.print("Please enter the player limit for this game:");
+					if (!sc.hasNextInt()) {
+						System.out.println("Error: Please enter a number for the player limit (From 1-4).");
+						System.out.println();
+						sc.next();
+						continue;
+					}
+					int playerLimit = sc.nextInt();
+					if (playerLimit > 4 || playerLimit < 1) {
+						System.out.println("Please enter the correct player limit from 1-4 players");
+						continue;
+					}
+
+					System.out.println("Connection to the server and creating Game room..");
+					Client client = new Client("localhost", 8080);
+					client.connect();
+
+					AddConnectionPacket packet = new AddConnectionPacket();
+					client.sendObject(packet);
+
+					SettingPacket settingPacket = new SettingPacket(playerLimit);
+					client.sendObject(settingPacket);
+					break;
+				} else if (opt == 2) {
+					System.out.println("Joining game..");
+
+					Client client = new Client("localhost", 8080);
+					client.connect();
+
+					AddConnectionPacket packet = new AddConnectionPacket();
+					client.sendObject(packet);
+
+					break;
+				}
+			} while (true);
+			break;
+		} while (true);
+	}
+}
