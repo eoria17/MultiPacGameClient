@@ -13,13 +13,12 @@ import javax.swing.JPanel;
  * The overridden paintcompnent() is called whenever the board
  * or the pieces needs to be updated 
  */
-public class BoardPanel extends JPanel implements ActionListener {
+public class BoardPanel extends JPanel implements ActionListener, KeyEventHandler {
 
    private Player player;
    private Monster monster;
    private Grid grid;
    private Graphics gr;
-   private Game game;
    private final int CELLWIDTH = 40;
    private final int CELLHEIGHT = 40;
    private final int LMARGIN = 100;
@@ -33,20 +32,26 @@ public class BoardPanel extends JPanel implements ActionListener {
        	gr = this.getGraphics(); 
    }
 
-   /* responds to various button clicked messages */ 
-   public void actionPerformed(ActionEvent e)
-   {
-	   if (((JButton)e.getSource()).getText().compareTo("up") == 0)
-	      player.setDirection('U');
-	   else if (((JButton)e.getSource()).getText().compareTo("down") == 0)
-		  player.setDirection('D');
-	   else if (((JButton)e.getSource()).getText().compareTo("left") == 0)
-		  player.setDirection('L');
-	   else if (((JButton)e.getSource()).getText().compareTo("right") == 0)
-		  player.setDirection('R');
-	   else if (((JButton)e.getSource()).getText().compareTo("start") == 0)
-		  player.setReady(true);
-	}
+    /* responds to various button clicked messages */
+    public void actionPerformed(ActionEvent e)
+    {
+        if (((JButton)e.getSource()).getText().compareTo("start") == 0)
+            player.setReady(true);
+    }
+
+    @Override
+    public void handleKeyEvent(String keyCode) {
+        if (keyCode.compareTo("up") == 0)
+            player.setDirection('U');
+        else if (keyCode.compareTo("down") == 0)
+            player.setDirection('D');
+        else if (keyCode.compareTo("left") == 0)
+            player.setDirection('L');
+        else if (keyCode.compareTo("right") == 0)
+            player.setDirection('R');
+        else if (keyCode.compareTo("start") == 0)
+            player.setReady(true);
+    }
    
    /* returns the x coordinate based on left margin and cell width */
    private int xCor(int col)
