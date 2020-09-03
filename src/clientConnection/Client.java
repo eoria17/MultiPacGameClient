@@ -9,6 +9,8 @@ import java.net.SocketException;
 
 import packets.RemoveConnectionPacket;
 
+//(Theo) This class will be responsible for managing data/object and running the game logic for the client. It will be responsible for
+//accepting and sending data to the server
 public class Client implements Runnable{
 	
 	private String host;
@@ -74,7 +76,6 @@ public class Client implements Runnable{
 				try {
 					System.out.println("You are connected to the server.. loading..");
 					Object data = in.readObject();
-					//manage game logic
 					listener.received(data, this);
 				}catch(ClassNotFoundException e) {
 					e.printStackTrace();

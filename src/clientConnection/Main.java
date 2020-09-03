@@ -8,15 +8,10 @@ import packets.SettingPacket;
 public class Main {
 
 	public static void main(String[] args) {
-//		Client client = new Client("localhost", 8080);
-//		client.connect();
-//
-//		AddConnectionPacket packet = new AddConnectionPacket();
-//		client.sendObject(packet);
-
 		tempMenu();
 	}
 
+	//(Theo) This func will be a temporary menu, it will be used to connect to the server and set the game max player setting
 	public static void tempMenu() {
 		Scanner sc = new Scanner(System.in);
 
@@ -53,12 +48,17 @@ public class Main {
 					}
 
 					System.out.println("Connection to the server and creating Game room..");
+
+					//(Theo) This will create a client object which is a thread object to connect to the server.
+					//The client thread will be responsible in managing the connection to the server
 					Client client = new Client("localhost", 8080);
 					client.connect();
 
+					//(Theo) This add connection packet will register the connection to the server, registering into the server's connected clients list.
 					AddConnectionPacket packet = new AddConnectionPacket();
 					client.sendObject(packet);
 
+					//(Theo) This will set the limit of how many clients are able to connect to the server.
 					SettingPacket settingPacket = new SettingPacket(playerLimit);
 					client.sendObject(settingPacket);
 					break;
