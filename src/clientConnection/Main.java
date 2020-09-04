@@ -34,7 +34,7 @@ public class Main {
 			}
 			int opt = sc.nextInt();
 
-			do {
+			
 				if (opt == 1) {
 					System.out.print("Please enter the player limit for this game:");
 					if (!sc.hasNextInt()) {
@@ -64,19 +64,19 @@ public class Main {
 					SettingPacket settingPacket = new SettingPacket(playerLimit);
 					client.sendObject(settingPacket);
 					
-					if(client.getSocket().isConnected()) {
-						System.out.println("Are you ready to play the game? (y/n)");
-						String ready = sc.next();
-						if(ready.equalsIgnoreCase("y")) {
-							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
-							client.sendObject(rpacket);
-							break;
-						}
-					}
+//					if(client.getSocket().isConnected()) {
+//						System.out.println("Are you ready to play the game? (y/n)");
+//						String ready = sc.next();
+//						if(ready.equalsIgnoreCase("y")) {
+//							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
+//							client.sendObject(rpacket);
+//							break;
+//						}
+//					}
 					break;
 					
 				} else if (opt == 2) {
-					System.out.println("Joining game..");
+					System.out.println("Connecting to the server..");
 
 					Client client = new Client("localhost", 8080);
 					client.connect();
@@ -84,19 +84,16 @@ public class Main {
 					AddConnectionPacket packet = new AddConnectionPacket();
 					client.sendObject(packet);
 					
-					System.out.println("Are you ready to play the game? (y/n)");
-					String ready = sc.next();
-					if(ready.equalsIgnoreCase("y")) {
-						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
-						client.sendObject(rpacket);
-						break;
-					}
+//					System.out.println("Are you ready to play the game? (y/n)");
+//					String ready = sc.next();
+//					if(ready.equalsIgnoreCase("y")) {
+//						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
+//						client.sendObject(rpacket);
+//						break;
+//					}
 					
 				}
-				
-			} while (true);
 			break;
-			
 		} while (true);
 	}
 }

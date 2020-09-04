@@ -80,6 +80,7 @@ public class Client implements Runnable{
 					
 					boolean allReady = true;
 					
+					System.out.println(ConnectionHandler.playersReady);
 					//check if all players are ready
 					for(boolean ready : ConnectionHandler.playersReady.values()) {
 						if(!ready) {
@@ -88,24 +89,24 @@ public class Client implements Runnable{
 						}
 					}
 					
-					//run the game
-					if(allReady) {
-						System.out.println("enter all ready");
-						System.out.println(ConnectionHandler.playersReady);
-						
-						try {
-							Game game = new Game();
-					        game.setTitle("Monster Game");
-					        game.setSize(700,700);
-					        game.setLocationRelativeTo(null);  // center the frame
-					        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					        game.setVisible(true);
-					        game.play();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						
-					}
+//					//run the game
+//					if(allReady) {
+//						System.out.println("enter all ready");
+//						System.out.println(ConnectionHandler.playersReady);
+//						
+//						try {
+//							Game game = new Game();
+//					        game.setTitle("Monster Game");
+//					        game.setSize(700,700);
+//					        game.setLocationRelativeTo(null);  // center the frame
+//					        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//					        game.setVisible(true);
+//					        game.play();
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//						
+//					}
 					
 					
 				}catch(ClassNotFoundException e) {
