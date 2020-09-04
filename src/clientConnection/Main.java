@@ -12,6 +12,7 @@ public class Main {
 		tempMenu();
 	}
 
+	//(Li//)
 	//(Theo) This func will be a temporary menu, it will be used to connect to the server and set the game max player setting
 	public static void tempMenu() {
 		Scanner sc = new Scanner(System.in);
