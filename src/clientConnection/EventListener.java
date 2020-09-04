@@ -16,12 +16,14 @@ public class EventListener {
 		if(p instanceof AddConnectionPacket) {
 			AddConnectionPacket packet = (AddConnectionPacket)p;
 			ConnectionHandler.connections.put(packet.id,new Connection(packet.id));
+			ConnectionHandler.playersReady.put(packet.id, false);
 			System.out.println("Player " + (packet.id + 1) + " has connected");
 		
 		}else if(p instanceof RemoveConnectionPacket) {
 			RemoveConnectionPacket packet = (RemoveConnectionPacket)p;
 			System.out.println("Connection: " + packet.id + " has disconnected");
 			ConnectionHandler.connections.remove(packet.id);
+			c.close();
 		
 		}else if(p instanceof RejectedPacket) {
 			RejectedPacket packet = (RejectedPacket) p;
@@ -30,19 +32,20 @@ public class EventListener {
 			RemoveConnectionPacket rp = new RemoveConnectionPacket();
 			rp.id = ConnectionHandler.id;
 			c.sendObject(rp);
-			c.close();
+			
 			System.out.println("Game is closed.");
+			c.close();
 			
 		}else if(p instanceof ClientSettingPacket) {
 			ClientSettingPacket packet = (ClientSettingPacket) p;
 			ConnectionHandler.id = packet.id;
+			ConnectionHandler.playersReady.put(packet.id, false);
 			
 			System.out.println("You are player " + (ConnectionHandler.id + 1));
 		
 		}else if(p instanceof PlayersUpdatePacket) {
 			PlayersUpdatePacket packet = (PlayersUpdatePacket) p;
 			
-			//work in progress
 			for(int key : packet.readyStatus.keySet()) {
 				ConnectionHandler.playersReady.put(key, packet.readyStatus.get(key));
 			}

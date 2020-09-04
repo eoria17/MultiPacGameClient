@@ -7,6 +7,9 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 
+import javax.swing.JFrame;
+
+import game.Game;
 import packets.RemoveConnectionPacket;
 
 //(Theo) This class will be responsible for managing data/object and running the game logic for the client. It will be responsible for
@@ -42,11 +45,13 @@ public class Client implements Runnable{
 		}
 	}
 	
+	public Socket getSocket() {
+		return socket;
+	}
+
 	public void close() {
 		try {
 			running = false;
-			RemoveConnectionPacket packet = new RemoveConnectionPacket();
-			sendObject(packet);
 			in.close();
 			out.close();
 			socket.close();
@@ -71,12 +76,38 @@ public class Client implements Runnable{
 			while(running) {
 				try {
 					Object data = in.readObject();
+					listener.received(data, this);
+					
+					boolean allReady = true;
 					
 					//check if all players are ready
+					for(boolean ready : ConnectionHandler.playersReady.values()) {
+						if(!ready) {
+							allReady = false;
+							break;
+						}
+					}
 					
-					//if all ready then game start
+					//run the game
+					if(allReady) {
+						System.out.println("enter all ready");
+						System.out.println(ConnectionHandler.playersReady);
+						
+						try {
+							Game game = new Game();
+					        game.setTitle("Monster Game");
+					        game.setSize(700,700);
+					        game.setLocationRelativeTo(null);  // center the frame
+					        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					        game.setVisible(true);
+					        game.play();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+					}
 					
-					listener.received(data, this);
+					
 				}catch(ClassNotFoundException e) {
 					e.printStackTrace();
 				}catch(SocketException e) {

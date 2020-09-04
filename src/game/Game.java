@@ -32,6 +32,7 @@ public class Game extends JFrame {
     {
         grid = new Grid();
         player = new Player(grid,0,0);
+        
         monster = new Monster(grid,player,5,5);
         bp = new BoardPanel(grid,player,monster);
 
@@ -76,6 +77,8 @@ public class Game extends JFrame {
         do {
             bp.requestFocusInWindow();
             Position newPlayerCell = player.move();
+            //send object to server
+            
             if (newPlayerCell == monster.getCell())
                 break;
             player.setDirection(' ');   // reset to no direction
