@@ -61,6 +61,7 @@ public class Main {
 					//(Theo) This will set the limit of how many clients are able to connect to the server.
 					SettingPacket settingPacket = new SettingPacket(playerLimit);
 					client.sendObject(settingPacket);
+					
 					break;
 				} else if (opt == 2) {
 					System.out.println("Joining game..");

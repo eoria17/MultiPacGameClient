@@ -1,6 +1,7 @@
 package clientConnection;
 
 import packets.AddConnectionPacket;
+import packets.ClientSettingPacket;
 import packets.RejectedPacket;
 import packets.RemoveConnectionPacket;
 
@@ -26,8 +27,14 @@ public class EventListener {
 			System.out.println(packet.message);
 			
 			RemoveConnectionPacket rp = new RemoveConnectionPacket();
-			rp.id = c.id;
+			rp.id = ConnectionHandler.id;
 			c.sendObject(rp);
+			c.close();
+			System.out.println("Game is closed.");
+			
+		}else if(p instanceof ClientSettingPacket) {
+			ClientSettingPacket packet = (ClientSettingPacket) p;
+			ConnectionHandler.id = packet.id;
 		}
 	}
 	
