@@ -23,7 +23,6 @@ public class EventListener {
 			RemoveConnectionPacket packet = (RemoveConnectionPacket)p;
 			System.out.println("Connection: " + packet.id + " has disconnected");
 			ConnectionHandler.connections.remove(packet.id);
-			c.close();
 		
 		}else if(p instanceof RejectedPacket) {
 			RejectedPacket packet = (RejectedPacket) p;
@@ -39,6 +38,7 @@ public class EventListener {
 		}else if(p instanceof ClientSettingPacket) {
 			ClientSettingPacket packet = (ClientSettingPacket) p;
 			ConnectionHandler.id = packet.id;
+			
 			ConnectionHandler.playersReady.put(packet.id, false);
 			
 			System.out.println("You are player " + (ConnectionHandler.id + 1));

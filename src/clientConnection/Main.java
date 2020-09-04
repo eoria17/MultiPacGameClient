@@ -64,15 +64,16 @@ public class Main {
 					SettingPacket settingPacket = new SettingPacket(playerLimit);
 					client.sendObject(settingPacket);
 					
-//					if(client.getSocket().isConnected()) {
-//						System.out.println("Are you ready to play the game? (y/n)");
-//						String ready = sc.next();
-//						if(ready.equalsIgnoreCase("y")) {
-//							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
-//							client.sendObject(rpacket);
-//							break;
-//						}
-//					}
+					if(client.getSocket().isConnected()) {
+						System.out.println("Are you ready to play the game? (y/n)");
+						String ready = sc.next();
+						if(ready.equalsIgnoreCase("y")) {
+							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
+							client.sendObject(rpacket);
+							break;
+						}
+					}
+					
 					break;
 					
 				} else if (opt == 2) {
@@ -84,15 +85,21 @@ public class Main {
 					AddConnectionPacket packet = new AddConnectionPacket();
 					client.sendObject(packet);
 					
-//					System.out.println("Are you ready to play the game? (y/n)");
-//					String ready = sc.next();
-//					if(ready.equalsIgnoreCase("y")) {
-//						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
-//						client.sendObject(rpacket);
-//						break;
-//					}
+					if(client.getSocket().isConnected()) {
+						
+						System.out.println("Are you ready to play the game? (y/n)");
+						String ready = sc.next();
+						
+						if(ready.equalsIgnoreCase("y")) {
+							
+							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
+							client.sendObject(rpacket);
+							break;
+						}
+					}
 					
 				}
+				
 			break;
 		} while (true);
 	}

@@ -89,6 +89,10 @@ public class Client implements Runnable{
 						}
 					}
 					
+					if(allReady) {
+						System.out.println("everyone is ready");
+					}
+					
 //					//run the game
 //					if(allReady) {
 //						System.out.println("enter all ready");
