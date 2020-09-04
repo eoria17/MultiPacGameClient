@@ -3,6 +3,7 @@ package clientConnection;
 import java.util.Scanner;
 
 import packets.AddConnectionPacket;
+import packets.ReadyPacket;
 import packets.SettingPacket;
 
 public class Main {
@@ -62,6 +63,12 @@ public class Main {
 					SettingPacket settingPacket = new SettingPacket(playerLimit);
 					client.sendObject(settingPacket);
 					
+					System.out.println("Are you ready to play the game? (y/n)");
+					String ready = sc.next();
+					if(ready.equalsIgnoreCase("y")) {
+						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
+						client.sendObject(rpacket);
+					}
 					break;
 				} else if (opt == 2) {
 					System.out.println("Joining game..");
@@ -71,11 +78,17 @@ public class Main {
 
 					AddConnectionPacket packet = new AddConnectionPacket();
 					client.sendObject(packet);
-
+					
+					System.out.println("Are you ready to play the game? (y/n)");
+					String ready = sc.next();
+					if(ready.equalsIgnoreCase("y")) {
+						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
+						client.sendObject(rpacket);
+					}
 					break;
 				}
+				
 			} while (true);
-			break;
 		} while (true);
 	}
 }

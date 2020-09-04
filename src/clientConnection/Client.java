@@ -71,6 +71,11 @@ public class Client implements Runnable{
 			while(running) {
 				try {
 					Object data = in.readObject();
+					
+					//check if all players are ready
+					
+					//if all ready then game start
+					
 					listener.received(data, this);
 				}catch(ClassNotFoundException e) {
 					e.printStackTrace();
