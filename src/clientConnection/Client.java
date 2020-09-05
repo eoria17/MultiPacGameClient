@@ -73,6 +73,7 @@ public class Client implements Runnable{
 		try {
 			running = true;
 			System.out.println("You are connected! Loading the game...");
+			System.out.println();
 			while(running) {
 				try {
 					Object data = in.readObject();
@@ -80,9 +81,9 @@ public class Client implements Runnable{
 					
 					boolean allReady = true;
 					
-					System.out.println(ConnectionHandler.playersReady);
+					System.out.println(ConnectionHandler.allPlayersReadyStatus);
 					//check if all players are ready
-					for(boolean ready : ConnectionHandler.playersReady.values()) {
+					for(boolean ready : ConnectionHandler.allPlayersReadyStatus.values()) {
 						if(!ready) {
 							allReady = false;
 							break;

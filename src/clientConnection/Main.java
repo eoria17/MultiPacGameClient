@@ -68,6 +68,7 @@ public class Main {
 						System.out.println("Are you ready to play the game? (y/n)");
 						String ready = sc.next();
 						if(ready.equalsIgnoreCase("y")) {
+							ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
 							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
 							client.sendObject(rpacket);
 							break;
@@ -91,7 +92,7 @@ public class Main {
 						String ready = sc.next();
 						
 						if(ready.equalsIgnoreCase("y")) {
-							
+							ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
 							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
 							client.sendObject(rpacket);
 							break;

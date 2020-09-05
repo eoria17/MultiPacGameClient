@@ -2,6 +2,7 @@ package clientConnection;
 
 import packets.AddConnectionPacket;
 import packets.ClientSettingPacket;
+import packets.EmptyPacket;
 import packets.PlayersUpdatePacket;
 import packets.RejectedPacket;
 import packets.RemoveConnectionPacket;
@@ -16,7 +17,7 @@ public class EventListener {
 		if(p instanceof AddConnectionPacket) {
 			AddConnectionPacket packet = (AddConnectionPacket)p;
 			ConnectionHandler.connections.put(packet.id,new Connection(packet.id));
-			ConnectionHandler.playersReady.put(packet.id, false);
+			ConnectionHandler.allPlayersReadyStatus.put(packet.id, false);
 			System.out.println("Player " + (packet.id + 1) + " has connected");
 		
 		}else if(p instanceof RemoveConnectionPacket) {
@@ -39,16 +40,23 @@ public class EventListener {
 			ClientSettingPacket packet = (ClientSettingPacket) p;
 			ConnectionHandler.id = packet.id;
 			
-			ConnectionHandler.playersReady.put(packet.id, false);
+//			int numberOfPlayers = ConnectionHandler.id;
+			
+			ConnectionHandler.allPlayersReadyStatus.put(packet.id, false);
 			
 			System.out.println("You are player " + (ConnectionHandler.id + 1));
 		
 		}else if(p instanceof PlayersUpdatePacket) {
 			PlayersUpdatePacket packet = (PlayersUpdatePacket) p;
 			
+			System.out.println("From the server: " + packet.readyStatus);
+			
 			for(int key : packet.readyStatus.keySet()) {
-				ConnectionHandler.playersReady.put(key, packet.readyStatus.get(key));
+				ConnectionHandler.allPlayersReadyStatus.put(key, packet.readyStatus.get(key));
 			}
+		
+		}else if(p instanceof EmptyPacket) {
+			
 		}
 	}
 	
