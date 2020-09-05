@@ -51,9 +51,7 @@ public class EventListener {
 			
 			System.out.println("From the server: " + packet.readyStatus);
 			
-			for(int key : packet.readyStatus.keySet()) {
-				ConnectionHandler.allPlayersReadyStatus.put(key, packet.readyStatus.get(key));
-			}
+			ConnectionHandler.allPlayersReadyStatus = packet.readyStatus;
 		
 		}else if(p instanceof EmptyPacket) {
 			

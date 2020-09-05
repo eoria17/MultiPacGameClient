@@ -63,6 +63,8 @@ public class Client implements Runnable{
 	public void sendObject(Object packet) {
 		try {
 			out.writeObject(packet);
+			out.flush();
+			out.reset();
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -76,9 +78,10 @@ public class Client implements Runnable{
 			System.out.println();
 			while(running) {
 				try {
+					System.out.println("Waiting for data..");
 					Object data = in.readObject();
 					listener.received(data, this);
-					
+				
 					boolean allReady = true;
 					
 					System.out.println(ConnectionHandler.allPlayersReadyStatus);
@@ -112,7 +115,6 @@ public class Client implements Runnable{
 //						}
 //						
 //					}
-					
 					
 				}catch(ClassNotFoundException e) {
 					e.printStackTrace();
