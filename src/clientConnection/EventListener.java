@@ -10,14 +10,12 @@ import packets.PlayersUpdatePacket;
 import packets.RejectedPacket;
 import packets.RemoveConnectionPacket;
 import packets.StartGamePacket;
-import sun.jvm.hotspot.runtime.Thread;
 
 //(Theo) used to check what kind of packet are being received
 public class EventListener {
 	
 	private Game game;
 	private boolean gameRunningStatus = false;
-	private int time = 0;
 	
 	public void received(Object p, Client c) {
 
@@ -63,12 +61,12 @@ public class EventListener {
 			
 			if(gameRunningStatus) {
 				try {
-					time++;
-					Thread.sleep(1000);
-					String message = game.play(c, time);
+
+					String message = game.play(c);
 					
 					if(!message.equalsIgnoreCase("")) {
 						gameRunningStatus = false;
+						
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -89,7 +87,7 @@ public class EventListener {
 		        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		        game.setVisible(true);
 		        gameRunningStatus = true;
-		        game.play(c, time);
+		        game.play(c);
 		        
 			} catch (Exception e) {
 				e.printStackTrace();
