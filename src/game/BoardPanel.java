@@ -81,9 +81,9 @@ public class BoardPanel extends JPanel implements KeyListener {
 			gr.drawRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
 		}
 		
-		for(int p : players.keySet()) {
-			players.get(p).setCell(ConnectionHandler.allPlayersStartingPosition.get(p));
-		}
+//		for(int p : players.keySet()) {
+//			players.get(p).setCell(ConnectionHandler.allPlayersStartingPosition.get(p));
+//		}
 
 		for (int p : players.keySet()) {
 			cell = players.get(p).getCell();

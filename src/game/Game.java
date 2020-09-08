@@ -93,6 +93,10 @@ public class Game extends JFrame {
 		PlayerPositionPacket packet = new PlayerPositionPacket(ConnectionHandler.id, newPlayerCell);
 		c.sendObject(packet);
 		
+		for(int p : players.keySet()) {
+			players.get(p).setCell(ConnectionHandler.allPlayersStartingPosition.get(p));
+		}
+		
 		bp.repaint();
 
 		player.setDirection(' ');
