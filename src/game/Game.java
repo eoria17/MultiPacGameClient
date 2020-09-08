@@ -8,7 +8,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import clientConnection.Client;
 import clientConnection.ConnectionHandler;
+import packets.PlayerPositionPacket;
 
 /* This class is the main System level class which creates all the objects
  * representing the game logic (model) and the panel for user interaction.
@@ -34,7 +36,7 @@ public class Game extends JFrame {
      * It throws an exception if an attempt is made to place the player or the
      * monster in an invalid location.
      */
-    public Game(HashMap<Integer, Position> startingPosition) throws Exception
+    public Game(HashMap<Integer, Position> startingPosition, Client c) throws Exception
     {
         grid = new Grid();
         
@@ -77,7 +79,39 @@ public class Game extends JFrame {
      * after which it updates the moves in turn until time runs out (player won)
      * or player is eaten up (player lost).
      */
-    public String play()
+    public String play(Client c, int gameTime) {
+    	String message = "";
+    	
+//    	do {
+    		bp.requestFocusInWindow();
+    		Position newPlayerCell = player.move();
+    		
+    		PlayerPositionPacket packet = new PlayerPositionPacket(ConnectionHandler.id, newPlayerCell);
+    		c.sendObject(packet);
+    		
+    		player.setDirection(' ');
+    		
+    		int timeLeft = TIMEALLOWED - gameTime;
+            mLabel.setText("Time Remaining : "+ timeLeft);
+
+            bp.repaint();
+            
+            if(timeLeft == 0) {
+            	message = "Player Won";
+            }
+            
+//    	}while(time < TIMEALLOWED);
+    	
+//    	if (  time < TIMEALLOWED)			// players has been eaten up
+//            message =  "Player Lost";
+//        else
+//            message =  "Player Won";
+
+        mLabel.setText(message);
+        return message;
+    }
+    
+    public String oldPlay()
     {
         int time = 0;
         String message;
