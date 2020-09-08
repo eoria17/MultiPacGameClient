@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import clientConnection.ConnectionHandler;
 
 /* This panel represents the game board (grid) 
  * It also responds to game related events
@@ -16,6 +19,9 @@ import javax.swing.JPanel;
 public class BoardPanel extends JPanel implements ActionListener, KeyEventHandler {
 
    private Player player;
+   
+   private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+	
    private Monster monster;
    private Grid grid;
    private Graphics gr;
@@ -24,9 +30,10 @@ public class BoardPanel extends JPanel implements ActionListener, KeyEventHandle
    private final int LMARGIN = 100;
    private final int TMARGIN = 100;
    
-   public BoardPanel(Grid g, Player p, Monster m)
+   public BoardPanel(Grid g, HashMap<Integer, Player> players, Monster m)
    {
-        player = p;
+        this.players = players;
+        player = players.get(ConnectionHandler.id);
        	grid = g;
        	monster = m;
        	gr = this.getGraphics(); 
@@ -83,11 +90,15 @@ public class BoardPanel extends JPanel implements ActionListener, KeyEventHandle
     	   gr.setColor(Color.black);
            gr.drawRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
         }
-        cell = player.getCell();
- 	    gr.setColor(Color.red);
-        gr.fillOval(xCor(cell.col)+CELLWIDTH/8, yCor(cell.row)+CELLWIDTH/8, CELLWIDTH*3/4, CELLHEIGHT*3/4);
- 	    gr.setColor(Color.white);
-        gr.drawString("P",xCor(cell.col)+CELLWIDTH/3, yCor(cell.row)+2*CELLWIDTH/3);
+        
+        for(int p : players.keySet()) {
+        	cell = players.get(p).getCell();
+     	    gr.setColor(Color.red);
+            gr.fillOval(xCor(cell.col)+CELLWIDTH/8, yCor(cell.row)+CELLWIDTH/8, CELLWIDTH*3/4, CELLHEIGHT*3/4);
+     	    gr.setColor(Color.white);
+            gr.drawString(((p + 1) + ""),xCor(cell.col)+CELLWIDTH/3, yCor(cell.row)+2*CELLWIDTH/3);
+        }
+        
         
         if (monster.viewable())
         {

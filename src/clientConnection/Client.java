@@ -64,7 +64,6 @@ public class Client implements Runnable{
 		try {
 			out.writeObject(packet);
 			out.flush();
-			out.reset();
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -78,13 +77,11 @@ public class Client implements Runnable{
 			System.out.println();
 			while(running) {
 				try {
-					System.out.println("Waiting for data..");
 					Object data = in.readObject();
 					listener.received(data, this);
 				
 					boolean allReady = true;
-					
-					System.out.println(ConnectionHandler.allPlayersReadyStatus);
+				
 					//check if all players are ready
 					for(boolean ready : ConnectionHandler.allPlayersReadyStatus.values()) {
 						if(!ready) {
@@ -96,25 +93,6 @@ public class Client implements Runnable{
 					if(allReady) {
 						System.out.println("everyone is ready");
 					}
-					
-//					//run the game
-//					if(allReady) {
-//						System.out.println("enter all ready");
-//						System.out.println(ConnectionHandler.playersReady);
-//						
-//						try {
-//							Game game = new Game();
-//					        game.setTitle("Monster Game");
-//					        game.setSize(700,700);
-//					        game.setLocationRelativeTo(null);  // center the frame
-//					        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//					        game.setVisible(true);
-//					        game.play();
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
-//						
-//					}
 					
 				}catch(ClassNotFoundException e) {
 					e.printStackTrace();

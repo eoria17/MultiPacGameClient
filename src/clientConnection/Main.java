@@ -1,10 +1,13 @@
 package clientConnection;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
+import game.Position;
 import packets.AddConnectionPacket;
 import packets.ReadyPacket;
 import packets.SettingPacket;
+import packets.StartingPositionPacket;
 
 public class Main {
 
@@ -12,8 +15,52 @@ public class Main {
 		tempMenu();
 	}
 
-	//(Li//)
-	//(Theo) This func will be a temporary menu, it will be used to connect to the server and set the game max player setting
+	public static void setStartingPosition(Client c) {
+		Scanner sc = new Scanner(System.in);
+		
+		Position topLeft = new Position(0,0);
+		Position topRight = new Position(0,10);
+		Position botLeft = new Position(10,0);
+		Position botRight = new Position(10,10);
+		
+		HashMap<Integer, Position> startingPositions = new HashMap<Integer, Position>();
+		startingPositions.put(1, topLeft);
+		startingPositions.put(2, topRight);
+		startingPositions.put(3, botLeft);
+		startingPositions.put(4, botRight);
+
+		do {
+			System.out.println("---------------------------------------");
+			System.out.println("Select a starting position: ");
+			System.out.println("1. Top left");
+			System.out.println("2. Top right");
+			System.out.println("3. Bottom left");
+			System.out.println("4. Bottom Right");
+			
+			if (!sc.hasNextInt()) {
+				System.out.println("Error: Menu option enterred is not a number. Please enter a menu number.");
+				System.out.println();
+				sc.next();
+				continue;
+			}
+			int opt = sc.nextInt();
+			
+			if(ConnectionHandler.allPlayersStartingPosition.containsValue(startingPositions.get(opt))) {
+				System.out.println("Starting position already taken");
+				continue;
+			}else {
+				ConnectionHandler.allPlayersStartingPosition.put(ConnectionHandler.id, startingPositions.get(opt));
+				StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(opt));
+				c.sendObject(sPacket);
+				System.out.println("Starting position confirmed.");
+				break;
+			}
+		} while (true);
+
+	}
+
+	// (Theo) This func will be a temporary menu, it will be used to connect to the
+	// server and set the game max player setting
 	public static void tempMenu() {
 		Scanner sc = new Scanner(System.in);
 
@@ -34,73 +81,83 @@ public class Main {
 			}
 			int opt = sc.nextInt();
 
-			
-				if (opt == 1) {
-					System.out.print("Please enter the player limit for this game:");
-					if (!sc.hasNextInt()) {
-						System.out.println("Error: Please enter a number for the player limit (From 1-4).");
-						System.out.println();
-						sc.next();
-						continue;
-					}
-					int playerLimit = sc.nextInt();
-					if (playerLimit > 4 || playerLimit < 1) {
-						System.out.println("Please enter the correct player limit from 1-4 players");
-						continue;
-					}
-
-					System.out.println("Connection to the server and creating Game room..");
-
-					//(Theo) This will create a client object which is a thread object to connect to the server.
-					//The client thread will be responsible in managing the connection to the server
-					Client client = new Client("localhost", 8080);
-					client.connect();
-
-					//(Theo) This add connection packet will register the connection to the server, registering into the server's connected clients list.
-					AddConnectionPacket packet = new AddConnectionPacket();
-					client.sendObject(packet);
-
-					//(Theo) This will set the limit of how many clients are able to connect to the server.
-					SettingPacket settingPacket = new SettingPacket(playerLimit);
-					client.sendObject(settingPacket);
-					
-					if(client.getSocket().isConnected()) {
-						System.out.println("Are you ready to play the game? (y/n)");
-						String ready = sc.next();
-						if(ready.equalsIgnoreCase("y")) {
-							ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
-							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
-							client.sendObject(rpacket);
-							break;
-						}
-					}
-					
-					break;
-					
-				} else if (opt == 2) {
-					System.out.println("Connecting to the server..");
-
-					Client client = new Client("localhost", 8080);
-					client.connect();
-
-					AddConnectionPacket packet = new AddConnectionPacket();
-					client.sendObject(packet);
-					
-					if(client.getSocket().isConnected()) {
-						
-						System.out.println("Are you ready to play the game? (y/n)");
-						String ready = sc.next();
-						
-						if(ready.equalsIgnoreCase("y")) {
-							ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
-							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id ,true);
-							client.sendObject(rpacket);
-							break;
-						}
-					}
-					
+			if (opt == 1) {
+				System.out.print("Please enter the player limit for this game:");
+				if (!sc.hasNextInt()) {
+					System.out.println("Error: Please enter a number for the player limit (From 1-4).");
+					System.out.println();
+					sc.next();
+					continue;
 				}
-				
+				int playerLimit = sc.nextInt();
+				if (playerLimit > 4 || playerLimit < 1) {
+					System.out.println("Please enter the correct player limit from 1-4 players");
+					continue;
+				}
+
+				System.out.println("Connection to the server and creating Game room..");
+
+				// (Theo) This will create a client object which is a thread object to connect
+				// to the server.
+				// The client thread will be responsible in managing the connection to the
+				// server
+				Client client = new Client("localhost", 8080);
+				client.connect();
+
+				// (Theo) This add connection packet will register the connection to the server,
+				// registering into the server's connected clients list.
+				AddConnectionPacket packet = new AddConnectionPacket();
+				client.sendObject(packet);
+
+				// (Theo) This will set the limit of how many clients are able to connect to the
+				// server.
+				SettingPacket settingPacket = new SettingPacket(playerLimit);
+				client.sendObject(settingPacket);
+
+				if (client.getSocket().isConnected()) {
+					
+					setStartingPosition(client);
+					
+					System.out.println("Are you ready to play the game? (y/n)");
+					String ready = sc.next();
+					if (ready.equalsIgnoreCase("y")) {
+						ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
+						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
+						client.sendObject(rpacket);
+						break;
+					}
+
+					// select starting position
+				}
+
+				break;
+
+			} else if (opt == 2) {
+				System.out.println("Connecting to the server..");
+
+				Client client = new Client("localhost", 8080);
+				client.connect();
+
+				AddConnectionPacket packet = new AddConnectionPacket();
+				client.sendObject(packet);
+
+				if (client.getSocket().isConnected()) {
+					
+					setStartingPosition(client);
+					
+					System.out.println("Are you ready to play the game? (y/n)");
+					String ready = sc.next();
+
+					if (ready.equalsIgnoreCase("y")) {
+						ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
+						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
+						client.sendObject(rpacket);
+						break;
+					}
+				}
+
+			}
+
 			break;
 		} while (true);
 	}

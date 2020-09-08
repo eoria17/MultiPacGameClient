@@ -1,14 +1,20 @@
 package clientConnection;
 
+import javax.swing.JFrame;
+
+import game.Game;
 import packets.AddConnectionPacket;
 import packets.ClientSettingPacket;
 import packets.EmptyPacket;
 import packets.PlayersUpdatePacket;
 import packets.RejectedPacket;
 import packets.RemoveConnectionPacket;
+import packets.StartGamePacket;
 
 //(Theo) used to check what kind of packet are being received
 public class EventListener {
+	
+	private Game game;
 	
 	public void received(Object p, Client c) {
 
@@ -40,8 +46,6 @@ public class EventListener {
 			ClientSettingPacket packet = (ClientSettingPacket) p;
 			ConnectionHandler.id = packet.id;
 			
-//			int numberOfPlayers = ConnectionHandler.id;
-			
 			ConnectionHandler.allPlayersReadyStatus.put(packet.id, false);
 			
 			System.out.println("You are player " + (ConnectionHandler.id + 1));
@@ -52,8 +56,25 @@ public class EventListener {
 			System.out.println("From the server: " + packet.readyStatus);
 			
 			ConnectionHandler.allPlayersReadyStatus = packet.readyStatus;
+			ConnectionHandler.allPlayersStartingPosition = packet.clientsPosition;
 		
 		}else if(p instanceof EmptyPacket) {
+			
+		
+		}else if(p instanceof StartGamePacket) {
+			StartGamePacket packet = (StartGamePacket) p;
+			
+			try {
+				game = new Game(packet.clientsPosition);
+		        game.setTitle("Monster Game");
+		        game.setSize(700,700);
+		        game.setLocationRelativeTo(null);  // center the frame
+		        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		        game.setVisible(true);
+		        
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 		}
 	}

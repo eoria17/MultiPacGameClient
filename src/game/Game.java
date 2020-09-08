@@ -1,10 +1,14 @@
 package game;
 
-import game.*;
+import java.awt.BorderLayout;
+import java.util.HashMap;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import java.awt.*;
+import clientConnection.ConnectionHandler;
 
 /* This class is the main System level class which creates all the objects
  * representing the game logic (model) and the panel for user interaction.
@@ -22,19 +26,25 @@ public class Game extends JFrame {
     private Player player;
     private Monster monster;
     private BoardPanel bp;
+    
+    private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 
 
     /* This constructor creates the main model objects and the panel used for UI.
      * It throws an exception if an attempt is made to place the player or the
      * monster in an invalid location.
      */
-    public Game() throws Exception
+    public Game(HashMap<Integer, Position> startingPosition) throws Exception
     {
         grid = new Grid();
-        player = new Player(grid,0,0);
+        
+        for(Integer playerNumber : startingPosition.keySet()) {
+        	players.put(playerNumber, new Player(grid, startingPosition.get(playerNumber).getRow(), startingPosition.get(playerNumber).getCol()));
+        }
+        player = players.get(ConnectionHandler.id);
         
         monster = new Monster(grid,player,5,5);
-        bp = new BoardPanel(grid,player,monster);
+        bp = new BoardPanel(grid,players,monster);
 
         // Create a separate panel and add all the buttons
         JPanel panel = new JPanel();
@@ -104,14 +114,14 @@ public class Game extends JFrame {
         return message;
     }
 
-    public static void main(String args[]) throws Exception
-    {
-        Game game = new Game();
-        game.setTitle("Monster Game");
-        game.setSize(700,700);
-        game.setLocationRelativeTo(null);  // center the frame
-        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        game.setVisible(true);
-        game.play();
-    }
+//    public static void main(String args[]) throws Exception
+//    {
+//        Game game = new Game();
+//        game.setTitle("Monster Game");
+//        game.setSize(700,700);
+//        game.setLocationRelativeTo(null);  // center the frame
+//        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        game.setVisible(true);
+//        game.play();
+//    }
 }
