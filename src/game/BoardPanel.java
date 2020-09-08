@@ -80,10 +80,6 @@ public class BoardPanel extends JPanel implements KeyListener {
 			gr.setColor(Color.black);
 			gr.drawRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
 		}
-		
-//		for(int p : players.keySet()) {
-//			players.get(p).setCell(ConnectionHandler.allPlayersStartingPosition.get(p));
-//		}
 
 		for (int p : players.keySet()) {
 			cell = players.get(p).getCell();
@@ -100,6 +96,13 @@ public class BoardPanel extends JPanel implements KeyListener {
 			gr.fillRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
 			gr.setColor(Color.white);
 			gr.drawString("M", xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
+		}
+	}
+	
+	public void updatePlayers() {
+		for(int p : players.keySet()) {
+			Position newPos = ConnectionHandler.allPlayersStartingPosition.get(p);
+			players.get(p).setCell(newPos);
 		}
 	}
 
