@@ -89,10 +89,11 @@ public class Game extends JFrame {
 
 		bp.requestFocusInWindow();
 		Position newPlayerCell = player.move();
-		bp.repaint();
-
+		
 		PlayerPositionPacket packet = new PlayerPositionPacket(ConnectionHandler.id, newPlayerCell);
 		c.sendObject(packet);
+		
+		bp.repaint();
 
 		player.setDirection(' ');
 

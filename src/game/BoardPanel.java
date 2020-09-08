@@ -68,6 +68,7 @@ public class BoardPanel extends JPanel implements KeyListener {
 	protected void paintComponent(Graphics gr) {
 		super.paintComponent(gr);
 		Position cells[] = grid.getAllCells();
+		
 		Position cell;
 		for (int i = 0; i < cells.length; i++) {
 			cell = cells[i];
@@ -78,6 +79,10 @@ public class BoardPanel extends JPanel implements KeyListener {
 			gr.fillRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
 			gr.setColor(Color.black);
 			gr.drawRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
+		}
+		
+		for(int p : players.keySet()) {
+			players.get(p).setCell(ConnectionHandler.allPlayersStartingPosition.get(p));
 		}
 
 		for (int p : players.keySet()) {
