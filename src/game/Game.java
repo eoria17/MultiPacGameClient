@@ -24,7 +24,7 @@ public class Game extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final int TIMEALLOWED = 10;
+	private final int TIMEALLOWED = 100;
 	private int time = 0;
 
 	private JButton start = new JButton("start");
@@ -62,12 +62,11 @@ public class Game extends JFrame {
 		// add panels to frame
 		add(bp, BorderLayout.CENTER);
 		add(panel, BorderLayout.SOUTH);
-
+		
+		bp.addKeyListener(bp);
 		bp.setFocusable(true);
+		bp.setFocusTraversalKeysEnabled(false);
 
-		(new KeyBoard()).keyBoardListener(bp);
-		(new KeyBoard()).keyEventRegister(bp);
-		start.addActionListener(bp);
 	}
 
 	// method to delay by specified time in ms
@@ -85,12 +84,12 @@ public class Game extends JFrame {
 	 * is eaten up (player lost).
 	 */
 	public String play(Client c) {
-
+		
 		String message = "";
-		player.setDirection(' ');
 
 		bp.requestFocusInWindow();
 		Position newPlayerCell = player.move();
+		bp.repaint();
 
 		PlayerPositionPacket packet = new PlayerPositionPacket(ConnectionHandler.id, newPlayerCell);
 		c.sendObject(packet);

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 
 import javax.swing.JButton;
@@ -13,100 +15,120 @@ import clientConnection.ConnectionHandler;
 
 /* This panel represents the game board (grid) 
  * It also responds to game related events
- * The overridden paintcompnent() is called whenever the board
+ * The overridden paintcomponent() is called whenever the board
  * or the pieces needs to be updated 
  */
-public class BoardPanel extends JPanel implements ActionListener, KeyEventHandler {
+public class BoardPanel extends JPanel implements KeyListener {
 
-   private Player player;
-   
-   private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
-	
-   private Monster monster;
-   private Grid grid;
-   private Graphics gr;
-   private final int CELLWIDTH = 40;
-   private final int CELLHEIGHT = 40;
-   private final int LMARGIN = 100;
-   private final int TMARGIN = 100;
-   
-   public BoardPanel(Grid g, HashMap<Integer, Player> players, Monster m)
-   {
-        this.players = players;
-        player = players.get(ConnectionHandler.id);
-       	grid = g;
-       	monster = m;
-       	gr = this.getGraphics(); 
-   }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    /* responds to various button clicked messages */
-    public void actionPerformed(ActionEvent e)
-    {
-        if (((JButton)e.getSource()).getText().compareTo("start") == 0)
-            player.setReady(true);
-    }
+	private Player player;
 
-    @Override
-    public void handleKeyEvent(String keyCode) {
-        if (keyCode.compareTo("up") == 0)
-            player.setDirection('U');
-        else if (keyCode.compareTo("down") == 0)
-            player.setDirection('D');
-        else if (keyCode.compareTo("left") == 0)
-            player.setDirection('L');
-        else if (keyCode.compareTo("right") == 0)
-            player.setDirection('R');
-        else if (keyCode.compareTo("start") == 0)
-            player.setReady(true);
-    }
-   
-   /* returns the x coordinate based on left margin and cell width */
-   private int xCor(int col)
-   {
-	   return LMARGIN + col * CELLWIDTH;
-   }
-   /* returns the y coordinate based on top margin and cell height */
-   private int yCor(int row)
-   {
-	   return TMARGIN + row * CELLHEIGHT;
-   }
-   
-   /* Redraws the board and the pieces
-    * Called initially and in response to repaint()
-    */
-   protected void paintComponent(Graphics gr)
-   {
-        super.paintComponent(gr);
-  		Position cells[] = grid.getAllCells();
+	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+
+	private Monster monster;
+	private Grid grid;
+	private Graphics gr;
+	private final int CELLWIDTH = 40;
+	private final int CELLHEIGHT = 40;
+	private final int LMARGIN = 100;
+	private final int TMARGIN = 100;
+
+	public BoardPanel(Grid g, HashMap<Integer, Player> players, Monster m) {
+		this.players = players;
+		player = players.get(ConnectionHandler.id);
+		grid = g;
+		monster = m;
+		gr = this.getGraphics();
+	}
+
+	/* responds to various button clicked messages */
+	public void actionPerformed(ActionEvent e) {
+		if (((JButton) e.getSource()).getText().compareTo("start") == 0)
+			player.setReady(true);
+	}
+
+	/* returns the x coordinate based on left margin and cell width */
+	private int xCor(int col) {
+		return LMARGIN + col * CELLWIDTH;
+	}
+
+	/* returns the y coordinate based on top margin and cell height */
+	private int yCor(int row) {
+		return TMARGIN + row * CELLHEIGHT;
+	}
+
+	/*
+	 * Redraws the board and the pieces Called initially and in response to
+	 * repaint()
+	 */
+	protected void paintComponent(Graphics gr) {
+		super.paintComponent(gr);
+		Position cells[] = grid.getAllCells();
 		Position cell;
-        for (int i=0; i<cells.length; i++)
-        {
-           cell = cells[i];
-           if (cell.col%5 == 0 && cell.row%5 == 0)
-        	   gr.setColor(Color.cyan);
-           else 
-        	   gr.setColor(Color.white);
-           gr.fillRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);         	
-    	   gr.setColor(Color.black);
-           gr.drawRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
-        }
-        
-        for(int p : players.keySet()) {
-        	cell = players.get(p).getCell();
-     	    gr.setColor(Color.red);
-            gr.fillOval(xCor(cell.col)+CELLWIDTH/8, yCor(cell.row)+CELLWIDTH/8, CELLWIDTH*3/4, CELLHEIGHT*3/4);
-     	    gr.setColor(Color.white);
-            gr.drawString(((p + 1) + ""),xCor(cell.col)+CELLWIDTH/3, yCor(cell.row)+2*CELLWIDTH/3);
-        }
-        
-        
-        if (monster.viewable())
-        {
-           cell = monster.getCell();
-    	   gr.setColor(Color.black);
-           gr.fillRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
-    	   gr.setColor(Color.white);
-           gr.drawString("M",xCor(cell.col)+CELLWIDTH/3, yCor(cell.row)+2*CELLWIDTH/3);
-        }
-    }	
+		for (int i = 0; i < cells.length; i++) {
+			cell = cells[i];
+			if (cell.col % 5 == 0 && cell.row % 5 == 0)
+				gr.setColor(Color.cyan);
+			else
+				gr.setColor(Color.white);
+			gr.fillRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
+			gr.setColor(Color.black);
+			gr.drawRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
+		}
+
+		for (int p : players.keySet()) {
+			cell = players.get(p).getCell();
+			gr.setColor(Color.red);
+			gr.fillOval(xCor(cell.col) + CELLWIDTH / 8, yCor(cell.row) + CELLWIDTH / 8, CELLWIDTH * 3 / 4,
+					CELLHEIGHT * 3 / 4);
+			gr.setColor(Color.white);
+			gr.drawString(((p + 1) + ""), xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
+		}
+
+		if (monster.viewable()) {
+			cell = monster.getCell();
+			gr.setColor(Color.black);
+			gr.fillRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
+			gr.setColor(Color.white);
+			gr.drawString("M", xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+
+			player.setDirection('R');
+
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			
+			player.setDirection('L');
+			
+		}else if (e.getKeyCode() == KeyEvent.VK_UP) {
+			
+			player.setDirection('U');
+			
+		}else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			
+			player.setDirection('D');
+		}
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
