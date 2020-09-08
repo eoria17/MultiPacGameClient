@@ -101,7 +101,7 @@ public class Main {
 				// to the server.
 				// The client thread will be responsible in managing the connection to the
 				// server
-				Client client = new Client("localhost", 8080);
+				Client client = new Client("207.148.84.220", 2000);
 				client.connect();
 
 				// (Theo) This add connection packet will register the connection to the server,
@@ -135,7 +135,7 @@ public class Main {
 			} else if (opt == 2) {
 				System.out.println("Connecting to the server..");
 
-				Client client = new Client("localhost", 8080);
+				Client client = new Client("207.148.84.220", 2000);
 				client.connect();
 
 				AddConnectionPacket packet = new AddConnectionPacket();
