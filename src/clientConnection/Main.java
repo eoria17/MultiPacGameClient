@@ -15,6 +15,17 @@ public class Main {
 		tempMenu();
 	}
 
+	public static boolean setStartingPosition(Client c, int opt, HashMap<Integer, Position> startingPositions) {
+		if(ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(opt))) {
+			return false;
+		}else {
+			ConnectionHandler.allPlayersPosition.put(ConnectionHandler.id, startingPositions.get(opt));
+			StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(opt));
+			c.sendObject(sPacket);
+			return true;
+		}
+	}
+
 	public static void setStartingPosition(Client c) {
 		Scanner sc = new Scanner(System.in);
 		
@@ -22,7 +33,7 @@ public class Main {
 		Position topRight = new Position(0,10);
 		Position botLeft = new Position(10,0);
 		Position botRight = new Position(10,10);
-		
+
 		HashMap<Integer, Position> startingPositions = new HashMap<Integer, Position>();
 		startingPositions.put(1, topLeft);
 		startingPositions.put(2, topRight);
@@ -36,7 +47,7 @@ public class Main {
 			System.out.println("2. Top right");
 			System.out.println("3. Bottom left");
 			System.out.println("4. Bottom Right");
-			
+
 			if (!sc.hasNextInt()) {
 				System.out.println("Error: Menu option enterred is not a number. Please enter a menu number.");
 				System.out.println();
@@ -44,7 +55,7 @@ public class Main {
 				continue;
 			}
 			int opt = sc.nextInt();
-			
+
 			if(ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(opt))) {
 				System.out.println("Starting position already taken");
 				continue;

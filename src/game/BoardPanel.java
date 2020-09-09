@@ -18,7 +18,7 @@ import clientConnection.ConnectionHandler;
  * The overridden paintcomponent() is called whenever the board
  * or the pieces needs to be updated 
  */
-public class BoardPanel extends JPanel implements KeyListener {
+public class BoardPanel extends JPanel implements KeyEventHandler {
 
 	/**
 	 * 
@@ -115,36 +115,16 @@ public class BoardPanel extends JPanel implements KeyListener {
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-
-			player.setDirection('R');
-
-		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-
-			player.setDirection('L');
-
-		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-
+	public void handleKeyEvent(String keyCode) {
+		if (keyCode.compareTo("up") == 0)
 			player.setDirection('U');
-
-		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-
+		else if (keyCode.compareTo("down") == 0)
 			player.setDirection('D');
-		}
-
+		else if (keyCode.compareTo("left") == 0)
+			player.setDirection('L');
+		else if (keyCode.compareTo("right") == 0)
+			player.setDirection('R');
+		else if (keyCode.compareTo("start") == 0)
+			player.setReady(true);
 	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
