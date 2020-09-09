@@ -34,6 +34,7 @@ public class Game extends JFrame {
 	private Player player;
 	private Monster monster;
 	private BoardPanel bp;
+	private KeyBoard keyBoard;
 
 	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 
@@ -53,6 +54,7 @@ public class Game extends JFrame {
 
 		monster = new Monster(grid, player, 5, 5);
 		bp = new BoardPanel(grid, players, monster);
+		keyBoard = new KeyBoard(bp);
 
 		// Create a separate panel and add all the buttons
 		JPanel panel = new JPanel();
@@ -63,7 +65,7 @@ public class Game extends JFrame {
 		add(bp, BorderLayout.CENTER);
 		add(panel, BorderLayout.SOUTH);
 
-		bp.addKeyListener(bp);
+		keyBoard.keyEventRegister(bp);
 		bp.setFocusable(true);
 		bp.setFocusTraversalKeysEnabled(false);
 
