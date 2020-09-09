@@ -1,8 +1,5 @@
 package clientConnection;
 
-import javax.swing.JFrame;
-
-import game.Game;
 import packets.AddConnectionPacket;
 import packets.ClientSettingPacket;
 import packets.EmptyPacket;
@@ -16,7 +13,7 @@ public class EventListener {
 
 	private boolean gameRunningStatus = false;
 
-	public synchronized  void received(Object p, Client c) {
+	public synchronized  void received(Object p, Client c) throws PlayerLimitException {
 
 		// (Theo) if a new client connected to the server, the server will send the
 		// necessary clients data here.
@@ -33,16 +30,14 @@ public class EventListener {
 			ConnectionHandler.connections.remove(packet.id);
 
 		} else if (p instanceof RejectedPacket) {
-			RejectedPacket packet = (RejectedPacket) p;
-			System.out.println(packet.message);
-
-			RemoveConnectionPacket rp = new RemoveConnectionPacket();
-			rp.id = ConnectionHandler.id;
-			c.sendObject(rp);
-
-			System.out.println("Game is closed.");
-			c.close();
-
+			
+				RejectedPacket packet = (RejectedPacket) p;
+				throw new PlayerLimitException(packet.message);
+//				RemoveConnectionPacket rp = new RemoveConnectionPacket();
+//				rp.id = ConnectionHandler.id;
+//				c.sendObject(rp);
+				
+			
 		} else if (p instanceof ClientSettingPacket) {
 			ClientSettingPacket packet = (ClientSettingPacket) p;
 			ConnectionHandler.id = packet.id;

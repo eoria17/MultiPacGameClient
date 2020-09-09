@@ -95,7 +95,7 @@ public class Main {
 					continue;
 				}
 
-				System.out.println("Connection to the server and creating Game room..");
+				System.out.println("Connectiong to the server and creating Game room..");
 
 				// (Theo) This will create a client object which is a thread object to connect
 				// to the server.
@@ -103,57 +103,88 @@ public class Main {
 				// server
 				Client client = new Client(Settings.host, Settings.port);
 				client.connect();
-
-				// (Theo) This add connection packet will register the connection to the server,
-				// registering into the server's connected clients list.
-				AddConnectionPacket packet = new AddConnectionPacket();
-				client.sendObject(packet);
-
-				// (Theo) This will set the limit of how many clients are able to connect to the
-				// server.
-				SettingPacket settingPacket = new SettingPacket(playerLimit);
-				client.sendObject(settingPacket);
-
-				if (client.getSocket().isConnected()) {
+				
+				try {
+					Thread.sleep(1000);
 					
-					setStartingPosition(client);
-					
-					System.out.println("Are you ready to play the game? (y/n)");
-					String ready = sc.next();
-					if (ready.equalsIgnoreCase("y")) {
-						ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
-						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
-						client.sendObject(rpacket);
-						break;
+					if (!client.getSocket().isClosed()) {
+						// (Theo) This will set the limit of how many clients are able to connect to the
+						// server.
+						SettingPacket settingPacket = new SettingPacket(playerLimit);
+						client.sendObject(settingPacket);
 					}
-
-					// select starting position
+				} catch (Exception e) {
+					// TODO: handle exception
 				}
+				
+
+				try {
+					Thread.sleep(2000);
+					
+					if (!client.getSocket().isClosed()) {
+						// (Theo) This add connection packet will register the connection to the server,
+						// registering into the server's connected clients list.
+						AddConnectionPacket packet = new AddConnectionPacket();
+						client.sendObject(packet);
+						
+						setStartingPosition(client);
+						
+						System.out.println("Are you ready to play the game? (y/n)");
+						String ready = sc.next();
+						if (ready.equalsIgnoreCase("y")) {
+							ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
+							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
+							client.sendObject(rpacket);
+							break;
+						}
+
+						// select starting position
+					}
+					
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
 
 				break;
 
 			} else if (opt == 2) {
+				
 				System.out.println("Connecting to the server..");
 
 				Client client = new Client(Settings.host, Settings.port);
 				client.connect();
 
-				AddConnectionPacket packet = new AddConnectionPacket();
-				client.sendObject(packet);
-
-				if (client.getSocket().isConnected()) {
+				
+				
+				try {
+					Thread.sleep(3000);
 					
-					setStartingPosition(client);
-					
-					System.out.println("Are you ready to play the game? (y/n)");
-					String ready = sc.next();
+					if (!client.getSocket().isClosed()) {
+						AddConnectionPacket packet = new AddConnectionPacket();
+						client.sendObject(packet);
+						
+						setStartingPosition(client);
+						
+						System.out.println("Are you ready to play the game? (y/n)");
+						String ready = sc.next();
 
-					if (ready.equalsIgnoreCase("y")) {
-						ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
-						ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
-						client.sendObject(rpacket);
-						break;
+						if (ready.equalsIgnoreCase("y")) {
+							ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
+							ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
+							client.sendObject(rpacket);
+							break;
+						}else {
+							System.out.println("wrong input. game is closed.");
+							client.close();
+						}
 					}
+					
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 
 			}

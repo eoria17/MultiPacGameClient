@@ -7,11 +7,6 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 
-import javax.swing.JFrame;
-
-import game.Game;
-import packets.RemoveConnectionPacket;
-
 //(Theo) This class will be responsible for managing data/object and running the game logic for the client. It will be responsible for
 //accepting and sending data to the server
 public class Client implements Runnable{
@@ -26,9 +21,12 @@ public class Client implements Runnable{
 	private boolean running = false;
 	private EventListener listener;
 	
+	private String errorMessage;
+	
 	public Client(String host, int port) {
 		this.host = host;
 		this.port = port;
+		errorMessage = "";
 	}
 	
 	public void connect() {
@@ -47,6 +45,10 @@ public class Client implements Runnable{
 	
 	public Socket getSocket() {
 		return socket;
+	}
+	
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
 	public void close() {
@@ -72,7 +74,7 @@ public class Client implements Runnable{
 	}
 	
 	@Override
-	public synchronized void run() {
+	public synchronized void run(){
 		try {
 			running = true;
 			System.out.println("You are connected! Loading the game...");
@@ -86,7 +88,11 @@ public class Client implements Runnable{
 				}catch(ClassNotFoundException e) {
 					e.printStackTrace();
 				}catch(SocketException e) {
-					e.printStackTrace();
+					close();
+				} catch (PlayerLimitException e) {
+					errorMessage = e.getMessage();
+					System.out.println(errorMessage);
+					close();
 				}
 			}
 		}catch(IOException e) {
