@@ -45,11 +45,11 @@ public class Main {
 			}
 			int opt = sc.nextInt();
 			
-			if(ConnectionHandler.allPlayersStartingPosition.containsValue(startingPositions.get(opt))) {
+			if(ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(opt))) {
 				System.out.println("Starting position already taken");
 				continue;
 			}else {
-				ConnectionHandler.allPlayersStartingPosition.put(ConnectionHandler.id, startingPositions.get(opt));
+				ConnectionHandler.allPlayersPosition.put(ConnectionHandler.id, startingPositions.get(opt));
 				StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(opt));
 				c.sendObject(sPacket);
 				System.out.println("Starting position confirmed.");
@@ -101,7 +101,7 @@ public class Main {
 				// to the server.
 				// The client thread will be responsible in managing the connection to the
 				// server
-				Client client = new Client("207.148.84.220", 2000);
+				Client client = new Client(Settings.host, Settings.port);
 				client.connect();
 
 				// (Theo) This add connection packet will register the connection to the server,
@@ -135,7 +135,7 @@ public class Main {
 			} else if (opt == 2) {
 				System.out.println("Connecting to the server..");
 
-				Client client = new Client("207.148.84.220", 2000);
+				Client client = new Client(Settings.host, Settings.port);
 				client.connect();
 
 				AddConnectionPacket packet = new AddConnectionPacket();

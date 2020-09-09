@@ -1,13 +1,20 @@
 package game;
 
+import java.io.Serializable;
+
 /* This class uses a partially hollow 2D array to represent the games grid.  
  * Row and column corresponds to the 2D array row and column respectively. 
  * Hence, for the standard grid both row and column must be in the range 
  * 0 to 10. Furthermore, either row or column must be 0, 5 or 10.    
 */ 
 
-public class Grid {
+public class Grid implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	Position cells[] = new Position[57];
     Position cells2D[][] = new Position[11][11];
 			

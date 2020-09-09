@@ -1,9 +1,16 @@
 package game;
 
+import java.io.Serializable;
+
 /*  This class encapsulates player position and direction  
  */
-public class Player extends Moveable {
-   private boolean readyToStart = false;
+public class Player extends Moveable implements Serializable{
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+private boolean readyToStart = false;
    public Player(Grid g, int row, int col) throws Exception
    {
 	   super(g);

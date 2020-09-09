@@ -68,7 +68,7 @@ public class BoardPanel extends JPanel implements KeyListener {
 	protected void paintComponent(Graphics gr) {
 		super.paintComponent(gr);
 		Position cells[] = grid.getAllCells();
-		
+
 		Position cell;
 		for (int i = 0; i < cells.length; i++) {
 			cell = cells[i];
@@ -80,6 +80,14 @@ public class BoardPanel extends JPanel implements KeyListener {
 			gr.setColor(Color.black);
 			gr.drawRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
 		}
+
+//		cell = player.getCell();
+//		gr.setColor(Color.red);
+//		gr.fillOval(xCor(cell.col) + CELLWIDTH / 8, yCor(cell.row) + CELLWIDTH / 8, CELLWIDTH * 3 / 4,
+//				CELLHEIGHT * 3 / 4);
+//		gr.setColor(Color.white);
+//		gr.drawString(((ConnectionHandler.id + 1) + ""), xCor(cell.col) + CELLWIDTH / 3,
+//				yCor(cell.row) + 2 * CELLWIDTH / 3);
 
 		for (int p : players.keySet()) {
 			cell = players.get(p).getCell();
@@ -98,10 +106,10 @@ public class BoardPanel extends JPanel implements KeyListener {
 			gr.drawString("M", xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
 		}
 	}
-	
+
 	public void updatePlayers() {
-		for(int p : players.keySet()) {
-			Position newPos = ConnectionHandler.allPlayersStartingPosition.get(p);
+		for (int p : players.keySet()) {
+			Position newPos = ConnectionHandler.allPlayersPosition.get(p);
 			players.get(p).setCell(newPos);
 		}
 	}
@@ -119,15 +127,15 @@ public class BoardPanel extends JPanel implements KeyListener {
 			player.setDirection('R');
 
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			
+
 			player.setDirection('L');
-			
-		}else if (e.getKeyCode() == KeyEvent.VK_UP) {
-			
+
+		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+
 			player.setDirection('U');
-			
-		}else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			
+
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+
 			player.setDirection('D');
 		}
 

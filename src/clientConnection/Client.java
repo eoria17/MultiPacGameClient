@@ -64,35 +64,24 @@ public class Client implements Runnable{
 		try {
 			out.writeObject(packet);
 			out.flush();
+			out.reset();
+			
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
-	public void run() {
+	public synchronized void run() {
 		try {
 			running = true;
 			System.out.println("You are connected! Loading the game...");
 			System.out.println();
+			
 			while(running) {
 				try {
 					Object data = in.readObject();
 					listener.received(data, this);
-				
-					boolean allReady = true;
-				
-					//check if all players are ready
-					for(boolean ready : ConnectionHandler.allPlayersReadyStatus.values()) {
-						if(!ready) {
-							allReady = false;
-							break;
-						}
-					}
-					
-					if(allReady) {
-						System.out.println("everyone is ready");
-					}
 					
 				}catch(ClassNotFoundException e) {
 					e.printStackTrace();

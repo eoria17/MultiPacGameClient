@@ -62,7 +62,7 @@ public class Game extends JFrame {
 		// add panels to frame
 		add(bp, BorderLayout.CENTER);
 		add(panel, BorderLayout.SOUTH);
-		
+
 		bp.addKeyListener(bp);
 		bp.setFocusable(true);
 		bp.setFocusTraversalKeysEnabled(false);
@@ -78,23 +78,35 @@ public class Game extends JFrame {
 		}
 	}
 
+	public synchronized void updatePlayers() {
+		
+		for(int i : players.keySet()) {
+			try {
+				Player p = new Player(grid, ConnectionHandler.allPlayersPosition.get(i).getRow(), ConnectionHandler.allPlayersPosition.get(i).getCol());
+				
+				players.put(i, p);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
 	/*
 	 * This method waits until play is ready (until start button is pressed) after
 	 * which it updates the moves in turn until time runs out (player won) or player
 	 * is eaten up (player lost).
 	 */
-	public String play(Client c) {
-		
+	public synchronized String play(Client c) {
+
 		String message = "";
 
 		bp.requestFocusInWindow();
+
 		Position newPlayerCell = player.move();
-		
+
 		PlayerPositionPacket packet = new PlayerPositionPacket(ConnectionHandler.id, newPlayerCell);
 		c.sendObject(packet);
-		
-		bp.updatePlayers();
-		bp.repaint();
 
 		player.setDirection(' ');
 
@@ -102,8 +114,8 @@ public class Game extends JFrame {
 		System.out.println(timeLeft);
 		time++;
 		mLabel.setText("Time Remaining : " + timeLeft);
-		delay(1000);
 		bp.repaint();
+		delay(1000);
 
 		if (timeLeft == 0) {
 			message = "Player Won";
