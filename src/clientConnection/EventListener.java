@@ -1,12 +1,6 @@
 package clientConnection;
 
-import packets.AddConnectionPacket;
-import packets.ClientSettingPacket;
-import packets.EmptyPacket;
-import packets.PlayersUpdatePacket;
-import packets.RejectedPacket;
-import packets.RemoveConnectionPacket;
-import packets.StartGamePacket;
+import packets.*;
 
 //(Theo) used to check what kind of packet are being received
 public class EventListener {
@@ -75,6 +69,9 @@ public class EventListener {
 //				e.printStackTrace();
 //			}
 
+		} else if (p instanceof MonsterPositionPacket) {
+			MonsterPositionPacket packet = (MonsterPositionPacket) p;
+			ConnectionHandler.monsterPosition = packet.position;
 		}
 
 	}

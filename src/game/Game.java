@@ -27,7 +27,6 @@ public class Game extends JFrame {
 	private final int TIMEALLOWED = 100;
 	private int time = 0;
 
-	private JButton start = new JButton("start");
 	private JLabel mLabel = new JLabel("Time Remaining : " + TIMEALLOWED);
 
 	private Grid grid;
@@ -58,7 +57,6 @@ public class Game extends JFrame {
 
 		// Create a separate panel and add all the buttons
 		JPanel panel = new JPanel();
-		panel.add(start);
 		panel.add(mLabel);
 
 		// add panels to frame
@@ -94,6 +92,12 @@ public class Game extends JFrame {
 		
 	}
 
+	public synchronized void updateMonster() {
+		if (ConnectionHandler.monsterPosition != null) {
+			monster.setCell(ConnectionHandler.monsterPosition);
+		}
+	}
+
 	/*
 	 * This method waits until play is ready (until start button is pressed) after
 	 * which it updates the moves in turn until time runs out (player won) or player
@@ -117,7 +121,6 @@ public class Game extends JFrame {
 		time++;
 		mLabel.setText("Time Remaining : " + timeLeft);
 		bp.repaint();
-		delay(1000);
 
 		if (timeLeft == 0) {
 			message = "Player Won";
