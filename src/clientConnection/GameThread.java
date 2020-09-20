@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import game.Game;
 import packets.StartGamePacket;
 
+import static java.lang.Thread.sleep;
+
 public class GameThread implements Runnable {
 	
 	Game game;
@@ -19,6 +21,8 @@ public class GameThread implements Runnable {
 	public void start(StartGamePacket packet) {
 		
 		try {
+			ConnectionHandler.gridObstacles = packet.gridObstacles;
+
 			game = new Game(packet.clientsPosition, c);
 			game.setTitle("Monster Game");
 			game.setSize(700, 700);
@@ -37,7 +41,13 @@ public class GameThread implements Runnable {
 	public void run() {
 		
 		while(true) {
+			try {
+				sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			game.updatePlayers();
+			game.updateMonster();
 			String message = game.play(c);
 			
 			if (!message.equalsIgnoreCase("")) {

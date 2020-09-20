@@ -15,6 +15,7 @@ public class PlayersUpdatePacket implements Serializable{
 	
 	public HashMap<Integer,Boolean> readyStatus;
 	public HashMap<Integer,Position> clientsPosition;
+	public HashMap<Integer,Boolean> deathStatus;
 
 	public PlayersUpdatePacket(HashMap<Integer, Boolean> readyStatus, HashMap<Integer, Position> clientsPosition) {
 		this.readyStatus = readyStatus;
