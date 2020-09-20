@@ -3,8 +3,6 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.HashMap;
 
 import javax.swing.JButton;
@@ -89,6 +87,11 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 //				yCor(cell.row) + 2 * CELLWIDTH / 3);
 
 		for (int p : players.keySet()) {
+			// the player who was eaten by the monster should not be updated
+			if (ConnectionHandler.isPlayerDead(p)) {
+				continue;
+			}
+
 			cell = players.get(p).getCell();
 			gr.setColor(Color.red);
 			gr.fillOval(xCor(cell.col) + CELLWIDTH / 8, yCor(cell.row) + CELLWIDTH / 8, CELLWIDTH * 3 / 4,
@@ -115,6 +118,10 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 
 	@Override
 	public void handleKeyEvent(String keyCode) {
+		// if the current player is dead then do nothing
+		if (ConnectionHandler.isPlayerDead(ConnectionHandler.id)) {
+			return;
+		}
 		if (keyCode.compareTo("up") == 0)
 			player.setDirection('U');
 		else if (keyCode.compareTo("down") == 0)

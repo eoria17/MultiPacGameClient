@@ -126,6 +126,10 @@ public class Game extends JFrame {
 			message = "Player Won";
 		}
 
+		if (ConnectionHandler.deadPlayers.size() == ConnectionHandler.allPlayersReadyStatus.size()) {
+			message = "Player Lose";
+		}
+
 		mLabel.setText(message);
 		return message;
 	}
