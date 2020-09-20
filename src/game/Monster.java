@@ -6,6 +6,11 @@ package game;
  */
 
 public class Monster extends Moveable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private boolean canView = true;  // allows
 	private Player player;
 	public Monster(Grid g, Player p, int row, int col) throws Exception

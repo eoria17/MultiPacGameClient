@@ -45,6 +45,7 @@ public class EventListener {
 
 			ConnectionHandler.allPlayersReadyStatus = packet.readyStatus;
 			ConnectionHandler.allPlayersPosition = packet.clientsPosition;
+			ConnectionHandler.allFoodPosition = packet.foodPositions;
 
 			if (packet.deathStatus != null) {
 				ConnectionHandler.deadPlayers = packet.deathStatus;

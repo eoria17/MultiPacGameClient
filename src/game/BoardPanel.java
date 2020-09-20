@@ -25,6 +25,7 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 	private Player player;
 
 	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+	private HashMap<Integer, Position> foods;
 
 	private Monster monster;
 	private Grid grid;
@@ -40,6 +41,8 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 		grid = g;
 		monster = m;
 		gr = this.getGraphics();
+
+		this.foods = ConnectionHandler.allFoodPosition;
 	}
 
 	/* responds to various button clicked messages */
@@ -100,6 +103,15 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 			gr.drawString(((p + 1) + ""), xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
 		}
 
+		for (Position p : foods.values()) {
+
+			cell = p;
+			gr.setColor(Color.orange);
+			gr.fillOval(xCor(cell.col) + CELLWIDTH / 4, yCor(cell.row) + CELLWIDTH / 4, CELLWIDTH * 2 / 4,
+					CELLHEIGHT * 2 / 4);
+			gr.setColor(Color.white);
+		}
+
 		if (monster.viewable()) {
 			cell = monster.getCell();
 			gr.setColor(Color.black);
@@ -109,12 +121,12 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 		}
 	}
 
-	public void updatePlayers() {
-		for (int p : players.keySet()) {
-			Position newPos = ConnectionHandler.allPlayersPosition.get(p);
-			players.get(p).setCell(newPos);
-		}
-	}
+//	public void updatePlayers() {
+//		for (int p : players.keySet()) {
+//			Position newPos = ConnectionHandler.allPlayersPosition.get(p);
+//			players.get(p).setCell(newPos);
+//		}
+//	}
 
 	@Override
 	public void handleKeyEvent(String keyCode) {
@@ -122,6 +134,7 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 		if (ConnectionHandler.isPlayerDead(ConnectionHandler.id)) {
 			return;
 		}
+
 		if (keyCode.compareTo("up") == 0)
 			player.setDirection('U');
 		else if (keyCode.compareTo("down") == 0)
@@ -132,5 +145,13 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 			player.setDirection('R');
 		else if (keyCode.compareTo("start") == 0)
 			player.setReady(true);
+		else if (keyCode.compareTo("drop") == 0) { //set to key A
+			if(player.hasFood()) {
+				player.dropFood();
+				foods.put(ConnectionHandler.id, player.getFoodPosition());
+			}
+		}
+			
+
 	}
 }

@@ -3,13 +3,13 @@ package game;
 import java.awt.BorderLayout;
 import java.util.HashMap;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import clientConnection.Client;
 import clientConnection.ConnectionHandler;
+import packets.FoodPositionPacket;
 import packets.PlayerPositionPacket;
 
 /* This class is the main System level class which creates all the objects
@@ -36,6 +36,7 @@ public class Game extends JFrame {
 	private KeyBoard keyBoard;
 
 	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+	private HashMap<Integer, Position> foods;
 
 	/*
 	 * This constructor creates the main model objects and the panel used for UI. It
@@ -50,6 +51,8 @@ public class Game extends JFrame {
 					startingPosition.get(playerNumber).getCol()));
 		}
 		player = players.get(ConnectionHandler.id);
+		
+		foods = ConnectionHandler.allFoodPosition;
 
 		monster = new Monster(grid, player, 5, 5);
 		bp = new BoardPanel(grid, players, monster);
@@ -91,6 +94,10 @@ public class Game extends JFrame {
 		}
 		
 	}
+	
+	public synchronized void updateFoodPosition() {
+		
+	}
 
 	public synchronized void updateMonster() {
 		if (ConnectionHandler.monsterPosition != null) {
@@ -115,6 +122,14 @@ public class Game extends JFrame {
 		c.sendObject(packet);
 
 		player.setDirection(' ');
+		
+		//(Theo) food function
+		if(!player.hasFood()) {
+			foods.put(ConnectionHandler.id, player.getFoodPosition());
+			
+//			FoodPositionPacket fPacket = new FoodPositionPacket(ConnectionHandler.id, player.getFoodPosition());
+//			c.sendObject(fPacket);
+		}
 
 		int timeLeft = TIMEALLOWED - time;
 		System.out.println(timeLeft);
@@ -170,14 +185,4 @@ public class Game extends JFrame {
 		return message;
 	}
 
-//    public static void main(String args[]) throws Exception
-//    {
-//        Game game = new Game();
-//        game.setTitle("Monster Game");
-//        game.setSize(700,700);
-//        game.setLocationRelativeTo(null);  // center the frame
-//        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        game.setVisible(true);
-//        game.play();
-//    }
 }
