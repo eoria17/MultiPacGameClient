@@ -96,7 +96,7 @@ public class Game extends JFrame {
 	}
 	
 	public synchronized void updateFoodPosition() {
-		
+		foods = ConnectionHandler.allFoodPosition;
 	}
 
 	public synchronized void updateMonster() {
@@ -127,8 +127,8 @@ public class Game extends JFrame {
 		if(!player.hasFood()) {
 			foods.put(ConnectionHandler.id, player.getFoodPosition());
 			
-//			FoodPositionPacket fPacket = new FoodPositionPacket(ConnectionHandler.id, player.getFoodPosition());
-//			c.sendObject(fPacket);
+			FoodPositionPacket fPacket = new FoodPositionPacket(ConnectionHandler.id, player.getFoodPosition());
+			c.sendObject(fPacket);
 		}
 
 		int timeLeft = TIMEALLOWED - time;
