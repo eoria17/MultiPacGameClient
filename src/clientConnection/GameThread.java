@@ -46,8 +46,10 @@ public class GameThread implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
 			game.updatePlayers();
 			game.updateMonster();
+			
 			String message = game.play(c);
 			
 			if (!message.equalsIgnoreCase("")) {

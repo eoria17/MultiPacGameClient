@@ -58,20 +58,6 @@ public class EventListener {
 			GameThread newGame = new GameThread(c);
 			newGame.start(packet);
 
-//			try {
-//				game = new Game(packet.clientsPosition, c);
-//				game.setTitle("Monster Game");
-//				game.setSize(700, 700);
-//				game.setLocationRelativeTo(null); // center the frame
-//				game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//				game.setVisible(true);
-//				gameRunningStatus = true;
-//				game.play(c);
-//
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-
 		} else if (p instanceof MonsterPositionPacket) {
 			MonsterPositionPacket packet = (MonsterPositionPacket) p;
 			ConnectionHandler.monsterPosition = packet.position;
