@@ -22,6 +22,10 @@ public class OnlineMenu extends Application {
         vBox.setPadding(new Insets(11,12,13,14));
         BorderPane pane = new BorderPane();
         pane.setCenter(vBox);
+        
+        /**
+        *Link to create room function
+        */
 
         cr.setOnAction(event -> {
             stage.close();
@@ -29,16 +33,21 @@ public class OnlineMenu extends Application {
             Stage st = new Stage();
             cro.start(st);
         });
+        
+        /**
+        *Link to join room function
+        */
 
         jr.setOnAction(event -> {
+            stage.close();
+            JoinRoom joinRoom = new JoinRoom();
+            Stage st = new Stage();
+            joinRoom.start(st);
 
         });
-
-
-
-
-
-
+        /**
+        *Link to go back function
+        */
 
         back.setOnAction(event -> {
             stage.close();
@@ -46,15 +55,6 @@ public class OnlineMenu extends Application {
             Stage st = new Stage();
             smm.start(st);
         });
-
-
-
-
-
-
-
-
-
 
         Scene scene = new Scene(pane,400,400);
         stage.setTitle("Choose play mode");
