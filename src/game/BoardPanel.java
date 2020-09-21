@@ -81,14 +81,6 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 			gr.drawRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
 		}
 
-//		cell = player.getCell();
-//		gr.setColor(Color.red);
-//		gr.fillOval(xCor(cell.col) + CELLWIDTH / 8, yCor(cell.row) + CELLWIDTH / 8, CELLWIDTH * 3 / 4,
-//				CELLHEIGHT * 3 / 4);
-//		gr.setColor(Color.white);
-//		gr.drawString(((ConnectionHandler.id + 1) + ""), xCor(cell.col) + CELLWIDTH / 3,
-//				yCor(cell.row) + 2 * CELLWIDTH / 3);
-
 		for (int p : players.keySet()) {
 			// the player who was eaten by the monster should not be updated
 			if (ConnectionHandler.isPlayerDead(p)) {
@@ -103,8 +95,7 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 			gr.drawString(((p + 1) + ""), xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
 		}
 
-		for (Position p : foods.values()) {
-
+		for (Position p : ConnectionHandler.allFoodPosition.values()) {
 			cell = p;
 			gr.setColor(Color.orange);
 			gr.fillOval(xCor(cell.col) + CELLWIDTH / 4, yCor(cell.row) + CELLWIDTH / 4, CELLWIDTH * 2 / 4,

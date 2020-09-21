@@ -62,6 +62,11 @@ public class EventListener {
 		} else if (p instanceof MonsterPositionPacket) {
 			MonsterPositionPacket packet = (MonsterPositionPacket) p;
 			ConnectionHandler.monsterPosition = packet.position;
+		
+		}else if(p instanceof FoodEatenPacket) {
+			FoodEatenPacket packet = (FoodEatenPacket) p;
+			
+			ConnectionHandler.allFoodPosition.remove(packet.id);
 		}
 
 	}

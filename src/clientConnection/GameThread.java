@@ -49,6 +49,7 @@ public class GameThread implements Runnable {
 			
 			game.updatePlayers();
 			game.updateMonster();
+			game.updateFoodPosition();
 			
 			String message = game.play(c);
 			

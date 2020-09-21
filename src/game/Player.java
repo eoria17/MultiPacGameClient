@@ -12,6 +12,7 @@ public class Player extends Moveable implements Serializable {
 
 	private boolean readyToStart = false;
 	private boolean hasFood = true;
+	private boolean canDropFood = true;
 	
 	private Position foodPosition;
 
@@ -29,6 +30,14 @@ public class Player extends Moveable implements Serializable {
 
 	public int maxCellsPerMove() {
 		return 1;
+	}
+	
+	public boolean dropableFood() {
+		return canDropFood;
+	}
+	
+	public void setNoMoreFood() {
+		canDropFood = false;
 	}
 
 	public boolean hasFood() {

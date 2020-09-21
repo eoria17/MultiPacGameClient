@@ -96,7 +96,7 @@ public class Game extends JFrame {
 	}
 	
 	public synchronized void updateFoodPosition() {
-		foods = ConnectionHandler.allFoodPosition;
+		 foods = ConnectionHandler.allFoodPosition;
 	}
 
 	public synchronized void updateMonster() {
@@ -124,15 +124,16 @@ public class Game extends JFrame {
 		player.setDirection(' ');
 		
 		//(Theo) food function
-		if(!player.hasFood()) {
+		if(!player.hasFood() && player.dropableFood()) {
 			foods.put(ConnectionHandler.id, player.getFoodPosition());
+			
+			player.setNoMoreFood();
 			
 			FoodPositionPacket fPacket = new FoodPositionPacket(ConnectionHandler.id, player.getFoodPosition());
 			c.sendObject(fPacket);
 		}
 
 		int timeLeft = TIMEALLOWED - time;
-		System.out.println(timeLeft);
 		time++;
 		mLabel.setText("Time Remaining : " + timeLeft);
 		bp.repaint();
