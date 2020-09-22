@@ -29,7 +29,7 @@ public class Grid implements Serializable{
 		int k = 0;
 		for (int i = 0; i < numberOfRow; i++)
 			for (int j = 0; j < numberOfColumn; j++)
-				if (!isObstacle(i, j)) {
+				if (!isObstacle(j, i)) {
 					cells2D[i][j] = new Position(i, j);
 					cells[k++] = cells2D[i][j];
 				}
