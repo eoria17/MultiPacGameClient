@@ -41,14 +41,25 @@ public class Grid implements Serializable {
 		}
 		return totalCells - ConnectionHandler.gridObstacles.length;
 	}
+	
+	
+	//Li
+		private boolean isPlayerPosition(int i, int j) {
+			for (Position p : ConnectionHandler.allPlayersPosition.values()) {
+				if (i == p.col && j == p.row) {
+					return true;
+				}
+			}
+			return false;
+			
+		}
 
 	private boolean isObstacle(int i, int j) {
-		// Li
-		for (Position p : ConnectionHandler.allPlayersPosition.values()) {
-			if (i == p.col && j == p.row) {
-				return true;
-			}
-		}
+	
+		if(isPlayerPosition(i,j)) {
+			return true;
+		}		
+		
 		if (ConnectionHandler.gridObstacles == null) {
 			return false;
 		}
@@ -66,7 +77,7 @@ public class Grid implements Serializable {
 	 * 0 .. 10 and either row or col must be 0, 5 or 10.
 	 */
 	public Position getCell(int row, int col) throws Exception {
-		if (isObstacle(col, row) || row < 0 || row > numberOfRow - 1 || col < 0 || col > numberOfColumn - 1)
+		if ((isObstacle(col,row )&& !isPlayerPosition(col,row))|| row < 0 || row > numberOfRow - 1 || col < 0 || col > numberOfColumn - 1)
 			throw new Exception("Invalid Coordiantes row = " + row + " column " + col);
 		return cells2D[row][col];
 	}
@@ -113,6 +124,8 @@ public class Grid implements Serializable {
 			return false;
 
 	}
+	
+	
 
 	/*
 	 * returns the best direction from source cell to the target cell. Assumed cells
