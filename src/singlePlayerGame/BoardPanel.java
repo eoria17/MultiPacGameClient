@@ -1,9 +1,11 @@
-package SignleGame;
+package singlePlayerGame;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 public class BoardPanel extends JPanel implements KeyEventHandler {
 

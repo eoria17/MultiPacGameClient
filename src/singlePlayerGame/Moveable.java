@@ -1,4 +1,4 @@
-package SignleGame;
+package singlePlayerGame;
 
 public abstract class Moveable {
     protected char currentDirection;

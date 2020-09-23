@@ -1,4 +1,4 @@
-package SignleGame;
+package singlePlayerGame;
 
 public class Monster extends Moveable {
     private boolean canView = true;  // allows

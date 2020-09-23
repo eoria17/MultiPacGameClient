@@ -1,4 +1,4 @@
-package SignleGame;
+package singlePlayerGame;
 
 public interface KeyEventHandler {
     void handleKeyEvent(String key);

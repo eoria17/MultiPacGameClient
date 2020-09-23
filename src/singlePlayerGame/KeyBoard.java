@@ -1,4 +1,4 @@
-package SignleGame;
+package singlePlayerGame;
 
 
 import java.awt.event.KeyEvent;
@@ -8,19 +8,19 @@ import java.util.ArrayList;
 
 public class KeyBoard {
     private File config;
-    private ArrayList<SignleGame.KeyEventHandler> handler;
+    private ArrayList<singlePlayerGame.KeyEventHandler> handler;
     public static final String UP = "up";
     public static final String DOWN = "down";
     public static final String LEFT = "left";
     public static final String RIGHT = "right";
 
-    public KeyBoard(SignleGame.KeyEventHandler eventHandler) {
+    public KeyBoard(singlePlayerGame.KeyEventHandler eventHandler) {
         this.handler = new ArrayList<>();
         this.keyBoardListener(eventHandler);
     }
 
-    private void keyBoardListener(SignleGame.KeyEventHandler eventHandler) {
-        final SignleGame.KeyBoard that = this;
+    private void keyBoardListener(singlePlayerGame.KeyEventHandler eventHandler) {
+        final singlePlayerGame.KeyBoard that = this;
 
         eventHandler.addKeyListener(new KeyListener() {
             @Override

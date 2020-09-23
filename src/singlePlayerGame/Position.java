@@ -1,4 +1,4 @@
-package SignleGame;
+package singlePlayerGame;
 
 public class Position {
     protected int row;

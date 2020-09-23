@@ -1,4 +1,4 @@
-package SignleGame;
+package singlePlayerGame;
 
 public class Player extends Moveable {
     private boolean readyToStart = false;
