@@ -29,6 +29,8 @@ public class JoinRoom extends Application {
     public void start(Stage stage) {
         c = new Client(Settings.host, Settings.port);
         c.connect();
+        AddConnectionPacket packet = new AddConnectionPacket();
+        c.sendObject(packet);
 
         VBox vBox = new VBox();
         HBox hBox = new HBox(10);
