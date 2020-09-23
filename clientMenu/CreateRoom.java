@@ -184,8 +184,6 @@ public class CreateRoom extends Application {
                 if (!c.getSocket().isClosed()) {
                     // (Theo) This add connection packet will register the connection to the server,
                     // registering into the server's connected clients list.
-                    AddConnectionPacket packet = new AddConnectionPacket();
-                    c.sendObject(packet);
 
                     ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
                     ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
