@@ -31,10 +31,6 @@ public class OnlineMenu extends Application {
 
         cr.setOnAction(event -> {
             stage.close();
-            Client client = new Client(Settings.host, Settings.port);
-            client.connect();
-            AddConnectionPacket packet = new AddConnectionPacket();
-            client.sendObject(packet);
             CreateRoom cro = new CreateRoom();
             Stage st = new Stage();
             cro.start(st);
@@ -46,10 +42,6 @@ public class OnlineMenu extends Application {
 
         jr.setOnAction(event -> {
             stage.close();
-            Client client = new Client(Settings.host, Settings.port);
-            client.connect();
-            AddConnectionPacket packet = new AddConnectionPacket();
-            client.sendObject(packet);
             JoinRoom joinRoom = new JoinRoom();
             Stage st = new Stage();
             joinRoom.start(st);
