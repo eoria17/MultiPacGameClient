@@ -95,13 +95,13 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 			gr.drawString(((p + 1) + ""), xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
 		}
 
-//		for (Position p : ConnectionHandler.allFoodPosition.values()) {
-//			cell = p;
-//			gr.setColor(Color.orange);
-//			gr.fillOval(xCor(cell.col) + CELLWIDTH / 4, yCor(cell.row) + CELLWIDTH / 4, CELLWIDTH * 2 / 4,
-//					CELLHEIGHT * 2 / 4);
-//			gr.setColor(Color.white);
-//		}
+		for (Position p : ConnectionHandler.allFoodPosition.values()) {
+			cell = p;
+			gr.setColor(Color.orange);
+			gr.fillOval(xCor(cell.col) + CELLWIDTH / 4, yCor(cell.row) + CELLWIDTH / 4, CELLWIDTH * 2 / 4,
+					CELLHEIGHT * 2 / 4);
+			gr.setColor(Color.white);
+		}
 
 		if (monster.viewable()) {
 			cell = monster.getCell();
