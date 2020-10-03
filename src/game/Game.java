@@ -31,7 +31,7 @@ public class Game extends JFrame {
 
 	private Grid grid;
 	private Player player;
-	private Monster monster;
+	private Monster[] monsters;
 	private BoardPanel bp;
 	private KeyBoard keyBoard;
 
@@ -54,8 +54,9 @@ public class Game extends JFrame {
 		
 		foods = ConnectionHandler.allFoodPosition;
 
-		monster = new Monster(grid, player, 5, 5);
-		bp = new BoardPanel(grid, players, monster);
+		monsters = new Monster[]{new Monster(grid, player, 5, 5),
+				new Monster(grid, player, 5, 5)};
+		bp = new BoardPanel(grid, players, monsters);
 		keyBoard = new KeyBoard(bp);
 
 		// Create a separate panel and add all the buttons
@@ -100,8 +101,12 @@ public class Game extends JFrame {
 	}
 
 	public synchronized void updateMonster() {
-		if (ConnectionHandler.monsterPosition != null) {
-			monster.setCell(ConnectionHandler.monsterPosition);
+		if (ConnectionHandler.monsterPosition != null &&
+				ConnectionHandler.monsterPosition.length == monsters.length) {
+			for (int i = 0;i < monsters.length;i ++) {
+				Monster monster = monsters[i];
+				monster.setCell(ConnectionHandler.monsterPosition[i]);
+			}
 		}
 	}
 
@@ -149,41 +154,4 @@ public class Game extends JFrame {
 		mLabel.setText(message);
 		return message;
 	}
-
-	public String oldPlay() {
-		int time = 0;
-		String message;
-		player.setDirection(' '); // set to no direction
-		while (!player.isReady())
-			delay(100);
-		do {
-			bp.requestFocusInWindow();
-			Position newPlayerCell = player.move();
-			// send object to server
-
-			if (newPlayerCell == monster.getCell())
-				break;
-			player.setDirection(' '); // reset to no direction
-
-			Position newMonsterCell = monster.move();
-			if (newMonsterCell == player.getCell())
-				break;
-
-			// update time and repaint
-			time++;
-			mLabel.setText("Time Remaining : " + (TIMEALLOWED - time));
-			delay(1000);
-			bp.repaint();
-
-		} while (time < TIMEALLOWED);
-
-		if (time < TIMEALLOWED) // players has been eaten up
-			message = "Player Lost";
-		else
-			message = "Player Won";
-
-		mLabel.setText(message);
-		return message;
-	}
-
 }
