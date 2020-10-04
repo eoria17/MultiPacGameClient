@@ -1,11 +1,13 @@
 package clientConnection;
 
 import packets.*;
+import java.util.HashMap;
 
 //(Theo) used to check what kind of packet are being received
 public class EventListener {
 
 	private boolean gameRunningStatus = false;
+	private GameThread newGame;
 
 	public synchronized  void received(Object p, Client c) throws PlayerLimitException {
 
@@ -37,6 +39,9 @@ public class EventListener {
 			ConnectionHandler.id = packet.id;
 
 			ConnectionHandler.allPlayersReadyStatus.put(packet.id, false);
+			// used for initialize positions when restart the game
+			ConnectionHandler.allPlayersReadyPosition.put(packet.id,
+					ConnectionHandler.allPlayersPosition.get(packet.id));
 
 			System.out.println("You are player " + (ConnectionHandler.id + 1));
 
@@ -55,9 +60,24 @@ public class EventListener {
 
 		} else if (p instanceof StartGamePacket) {
 			StartGamePacket packet = (StartGamePacket) p;
-			
-			GameThread newGame = new GameThread(c);
-			newGame.start(packet);
+
+			// run the gamr for the first time
+			if (newGame == null) {
+				newGame = new GameThread(c);
+				newGame.start(packet);
+			} else { // restart the game
+				ConnectionHandler.rematchPlayers = new HashMap<>();
+				ConnectionHandler.monsterPosition = null;
+				ConnectionHandler.deadPlayers = new HashMap<>();
+				for (int i : ConnectionHandler.allPlayersReadyPosition.keySet()) {
+					ConnectionHandler.allPlayersPosition.put(i,
+							ConnectionHandler.allPlayersReadyPosition.get(i));
+				}
+
+				newGame.stop();
+				newGame = new GameThread(c);
+				newGame.start(packet);
+			}
 
 		} else if (p instanceof MonsterPositionPacket) {
 			MonsterPositionPacket packet = (MonsterPositionPacket) p;
@@ -67,6 +87,9 @@ public class EventListener {
 			FoodEatenPacket packet = (FoodEatenPacket) p;
 			
 			ConnectionHandler.allFoodPosition.remove(packet.id);
+		}else if(p instanceof RematchPlayersPacket) {
+			RematchPlayersPacket packet = (RematchPlayersPacket) p;
+			ConnectionHandler.rematchPlayers = packet.rematchPlayers;
 		}
 
 	}

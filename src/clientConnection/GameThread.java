@@ -11,11 +11,12 @@ public class GameThread implements Runnable {
 	
 	Game game;
 	Client c;
-	
+	boolean running;
 	
 	
 	public GameThread(Client c) {
 		this.c = c;
+		running = true;
 	}
 
 	public void start(StartGamePacket packet) {
@@ -33,14 +34,19 @@ public class GameThread implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		new Thread(this).start();
+	}
+
+	public void stop() {
+		running = false;
+		game.dispose();
 	}
 	
 	@Override
 	public void run() {
 		
-		while(true) {
+		while(running) {
 			try {
 				sleep(1000);
 			} catch (InterruptedException e) {
@@ -50,11 +56,17 @@ public class GameThread implements Runnable {
 			game.updatePlayers();
 			game.updateMonster();
 			game.updateFoodPosition();
-			
+
 			String message = game.play(c);
-			
-			if (!message.equalsIgnoreCase("")) {
-				break;
+
+			if (message.equalsIgnoreCase("")) {
+				// update the text of the timer
+				game.updateTextTime();
+			} else {
+				if (ConnectionHandler.rematchPlayers != null &&
+						ConnectionHandler.rematchPlayers.size() > 0) {
+					game.updateText(ConnectionHandler.rematchPlayers.size() + " players wish to play again.");
+				}
 			}
 		}
 		

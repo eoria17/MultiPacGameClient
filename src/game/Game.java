@@ -1,16 +1,17 @@
 package game;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import clientConnection.Client;
 import clientConnection.ConnectionHandler;
 import packets.FoodPositionPacket;
 import packets.PlayerPositionPacket;
+import packets.RematchPacket;
 
 /* This class is the main System level class which creates all the objects
  * representing the game logic (model) and the panel for user interaction.
@@ -28,6 +29,7 @@ public class Game extends JFrame {
 	private int time = 0;
 
 	private JLabel mLabel = new JLabel("Time Remaining : " + TIMEALLOWED);
+	private JButton restart = new JButton("play again");
 
 	private Grid grid;
 	private Player player;
@@ -62,6 +64,17 @@ public class Game extends JFrame {
 		// Create a separate panel and add all the buttons
 		JPanel panel = new JPanel();
 		panel.add(mLabel);
+		panel.add(restart);
+
+		restart.setVisible(false);
+		restart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				RematchPacket packet = new RematchPacket(ConnectionHandler.id);
+				c.sendObject(packet);
+				restart.setEnabled(false);
+			}
+		});
 
 		// add panels to frame
 		add(bp, BorderLayout.CENTER);
@@ -110,6 +123,15 @@ public class Game extends JFrame {
 		}
 	}
 
+	public synchronized void updateTextTime() {
+		int timeLeft = TIMEALLOWED - time;
+		mLabel.setText("Time Remaining : " + timeLeft);
+	}
+
+	public synchronized void updateText(String text) {
+		mLabel.setText(text);
+	}
+
 	/*
 	 * This method waits until play is ready (until start button is pressed) after
 	 * which it updates the moves in turn until time runs out (player won) or player
@@ -121,10 +143,16 @@ public class Game extends JFrame {
 
 		bp.requestFocusInWindow();
 
+		// if the new position is the same as the old position then no need to send position package
+		Position oldPosition = player.getCell();
 		Position newPlayerCell = player.move();
 
-		PlayerPositionPacket packet = new PlayerPositionPacket(ConnectionHandler.id, newPlayerCell);
-		c.sendObject(packet);
+		// if the new position is the same as the old position then no need to send position package
+		// except for the first time
+		if (time == 0 || (oldPosition.getCol() != newPlayerCell.getCol() || oldPosition.getRow() != newPlayerCell.getRow())) {
+			PlayerPositionPacket packet = new PlayerPositionPacket(ConnectionHandler.id, newPlayerCell);
+			c.sendObject(packet);
+		}
 
 		player.setDirection(' ');
 		
@@ -139,16 +167,26 @@ public class Game extends JFrame {
 		}
 
 		int timeLeft = TIMEALLOWED - time;
+		if (timeLeft < 0) {
+			timeLeft = 0;
+		}
 		time++;
 		mLabel.setText("Time Remaining : " + timeLeft);
 		bp.repaint();
 
 		if (timeLeft == 0) {
 			message = "Player Won";
+			restart.setVisible(true);
 		}
 
 		if (ConnectionHandler.deadPlayers.size() == ConnectionHandler.allPlayersReadyStatus.size()) {
 			message = "Player Lose";
+			restart.setVisible(true);
+		} else if (ConnectionHandler.allPlayersReadyStatus.size() > 1 &&
+				(ConnectionHandler.allPlayersReadyStatus.size() - ConnectionHandler.deadPlayers.size() == 1)) {
+			// only one player left
+			message = "Player Won";
+			restart.setVisible(true);
 		}
 
 		mLabel.setText(message);
