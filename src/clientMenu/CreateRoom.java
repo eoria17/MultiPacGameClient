@@ -65,18 +65,6 @@ public class CreateRoom extends Application {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 textField.setText(a[newValue.intValue()]);
                 limit = Integer.valueOf(textField.getText());
-                try {
-                    Thread.sleep(1000);
-
-                    if (!c.getSocket().isClosed()) {
-                        // (Theo) This will set the limit of how many clients are able to connect to the
-                        // server.
-                        SettingPacket settingPacket = new SettingPacket(limit);
-                        c.sendObject(settingPacket);
-                    }
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }
             }
         });
 
@@ -173,6 +161,18 @@ public class CreateRoom extends Application {
 
         ready.setOnAction(event -> {
             //stage.close();
+            try {
+                    Thread.sleep(1000);
+
+                    if (!c.getSocket().isClosed()) {
+                        // (Theo) This will set the limit of how many clients are able to connect to the
+                        // server.
+                        SettingPacket settingPacket = new SettingPacket(limit);
+                        c.sendObject(settingPacket);
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
             try {
                 Thread.sleep(2000);
                 if (!c.getSocket().isClosed()) {
