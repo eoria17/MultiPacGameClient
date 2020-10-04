@@ -20,8 +20,6 @@ import javax.swing.*;
 
 
 public class SelectModeMenu extends Application {
-    public boolean res = true;
-
 
     public void start(Stage stage) {
         VBox vBox = new VBox(50);
@@ -35,9 +33,6 @@ public class SelectModeMenu extends Application {
         vBox.setPadding(new Insets(11,12,13,14));
         BorderPane pane = new BorderPane();
         pane.setCenter(vBox);
-
-
-
 
         single.setOnAction(event -> {
             Task<Game> task = new Task<Game>() {
@@ -80,9 +75,6 @@ public class SelectModeMenu extends Application {
         launch(args);
     }
 
-    private void showGame(){
-
-    }
 
 }
 

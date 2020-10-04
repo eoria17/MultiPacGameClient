@@ -26,9 +26,12 @@ import java.util.HashMap;
 
 public class JoinRoom extends Application {
     Client c;
-    public void start(Stage stage){
+
+    public void start(Stage stage) {
         c = new Client(Settings.host, Settings.port);
         c.connect();
+        AddConnectionPacket packet = new AddConnectionPacket();
+        c.sendObject(packet);
 
         VBox vBox = new VBox();
         HBox hBox = new HBox(10);
@@ -42,7 +45,7 @@ public class JoinRoom extends Application {
 
         vBox.getChildren().addAll(t1);
         vBox.setAlignment(Pos.CENTER);
-        hBox1.getChildren().addAll(ready,goback);
+        hBox1.getChildren().addAll(ready, goback);
         hBox1.setAlignment(Pos.CENTER);
 
 
@@ -86,7 +89,7 @@ public class JoinRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(1));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(tr)){
+            } else if (newValue.equals(tr)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(2))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -98,7 +101,7 @@ public class JoinRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(2));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(bl)){
+            } else if (newValue.equals(bl)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(3))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -110,7 +113,7 @@ public class JoinRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(3));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(br)){
+            } else if (newValue.equals(br)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(4))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -131,15 +134,9 @@ public class JoinRoom extends Application {
                 Thread.sleep(3000);
 
                 if (!c.getSocket().isClosed()) {
-                    AddConnectionPacket packet = new AddConnectionPacket();
-                    c.sendObject(packet);
-
-
-
-                        ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
-                        ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
-                        c.sendObject(rpacket);
-
+                    ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
+                    ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
+                    c.sendObject(rpacket);
                 }
 
             } catch (InterruptedException e) {
@@ -149,6 +146,7 @@ public class JoinRoom extends Application {
             ready.setDisable(true);
         });
 
+
         goback.setOnAction(event -> {
             stage.close();
             OnlineMenu om = new OnlineMenu();
@@ -157,15 +155,12 @@ public class JoinRoom extends Application {
         });
 
 
-
-
-
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(vBox);
         borderPane.setCenter(hBox);
         borderPane.setBottom(hBox1);
 
-        Scene scene = new Scene(borderPane,600,400);
+        Scene scene = new Scene(borderPane, 600, 400);
         stage.setTitle("Join Room");
         stage.setScene(scene);
         stage.show();
