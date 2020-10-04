@@ -1,5 +1,7 @@
 package clientMenu;
 
+import clientConnection.Client;
+import clientConnection.Settings;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
-
+import packets.AddConnectionPacket;
 
 
 public class OnlineMenu extends Application {

@@ -8,8 +8,6 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -35,6 +33,8 @@ public class CreateRoom extends Application {
     public void start(Stage stage) {
         c = new Client(Settings.host, Settings.port);
         c.connect();
+        AddConnectionPacket packet = new AddConnectionPacket();
+        c.sendObject(packet);
         VBox vBox = new VBox(70);
         HBox hBox = new HBox(20);
 
@@ -53,7 +53,6 @@ public class CreateRoom extends Application {
         t1.setFont(fontBold);
         t2.setFont(fontBold);
 
-
         /**
          * player number
          */
@@ -66,6 +65,18 @@ public class CreateRoom extends Application {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 textField.setText(a[newValue.intValue()]);
                 limit = Integer.valueOf(textField.getText());
+                try {
+                    Thread.sleep(1000);
+
+                    if (!c.getSocket().isClosed()) {
+                        // (Theo) This will set the limit of how many clients are able to connect to the
+                        // server.
+                        SettingPacket settingPacket = new SettingPacket(limit);
+                        c.sendObject(settingPacket);
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
             }
         });
 
@@ -90,8 +101,6 @@ public class CreateRoom extends Application {
         HashMap<Integer, Position> startingPositions = new HashMap<Integer, Position>();
 
 
-
-
         startingPositions.put(1, topLeft);
         startingPositions.put(2, topRight);
         startingPositions.put(3, botLeft);
@@ -112,7 +121,7 @@ public class CreateRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(1));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(tr)){
+            } else if (newValue.equals(tr)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(2))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -124,7 +133,7 @@ public class CreateRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(2));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(bl)){
+            } else if (newValue.equals(bl)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(3))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -136,7 +145,7 @@ public class CreateRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(3));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(br)){
+            } else if (newValue.equals(br)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(4))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -163,29 +172,12 @@ public class CreateRoom extends Application {
         vBox1.setAlignment(Pos.CENTER);
 
         ready.setOnAction(event -> {
-
-
-            try {
-                Thread.sleep(1000);
-
-                if (!c.getSocket().isClosed()) {
-                    // (Theo) This will set the limit of how many clients are able to connect to the
-                    // server.
-                    SettingPacket settingPacket = new SettingPacket(limit);
-                    c.sendObject(settingPacket);
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-
+            //stage.close();
             try {
                 Thread.sleep(2000);
-
                 if (!c.getSocket().isClosed()) {
                     // (Theo) This add connection packet will register the connection to the server,
                     // registering into the server's connected clients list.
-                    AddConnectionPacket packet = new AddConnectionPacket();
-                    c.sendObject(packet);
 
                     ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
                     ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
@@ -199,9 +191,10 @@ public class CreateRoom extends Application {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            ready.setDisable(true);
 
             // avoid showing two windows at the same time
-            stage.close();
+            //stage.close();
         });
 
 
