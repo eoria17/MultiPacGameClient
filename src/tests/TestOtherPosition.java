@@ -6,7 +6,6 @@ import game.Player;
 import game.Position;
 import org.junit.*;
 import static org.junit.Assert.assertEquals;
-import javafx.*;
 
 import java.util.HashMap;
 import java.util.Map;

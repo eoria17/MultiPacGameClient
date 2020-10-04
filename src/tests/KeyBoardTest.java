@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class KeyBoardTest {
     Player player;
     HashMap<Integer, Player> players;
-    Monster monster;
+    Monster[] monster;
     Grid grid;
     BoardPanel bp;
     KeyBoard keyBoard;
@@ -20,7 +20,8 @@ public class KeyBoardTest {
         grid = new Grid();
         player = new Player(grid, 0 , 0);
         players = new HashMap<Integer, Player>();
-        monster = new Monster(grid, player, 5, 5);
+        monster = new Monster[]{new Monster(grid, player, 5, 5),
+                new Monster(grid, player, 5, 5)};
         bp = new BoardPanel(grid, players, monster);
         keyBoard = new KeyBoard(bp);
         keyBoard.keyEventRegister(bp);

@@ -5,14 +5,12 @@ import clientConnection.ConnectionHandler;
 import clientConnection.Settings;
 import game.Position;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,52 +20,33 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import packets.AddConnectionPacket;
 import packets.ReadyPacket;
-import packets.SettingPacket;
 import packets.StartingPositionPacket;
 
 import java.util.HashMap;
 
-
-public class CreateRoom extends Application {
-    public int limit;
+public class JoinRoom extends Application {
     Client c;
 
     public void start(Stage stage) {
         c = new Client(Settings.host, Settings.port);
         c.connect();
-        VBox vBox = new VBox(70);
-        HBox hBox = new HBox(20);
+        AddConnectionPacket packet = new AddConnectionPacket();
+        c.sendObject(packet);
 
-
-        VBox vBox1 = new VBox(70);
+        VBox vBox = new VBox();
+        HBox hBox = new HBox(10);
         HBox hBox1 = new HBox(20);
 
-        TextField textField = new TextField();
-
-
-        Text t1 = new Text("Player Number");
-        Text t2 = new Text("Player Start Position");
+        Text t1 = new Text("Player Start Position");
         Button ready = new Button("Ready?");
         Button goback = new Button("Back");
         Font fontBold = Font.font("Times New Roman", FontWeight.BOLD, 20);
         t1.setFont(fontBold);
-        t2.setFont(fontBold);
 
-
-        /**
-         * player number
-         */
-        final String[] a = new String[]{"1", "2", "3", "4"};
-        ChoiceBox<String> cb = new ChoiceBox<String>(
-                FXCollections.observableArrayList("1", "2", "3", "4")
-        );
-        cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                textField.setText(a[newValue.intValue()]);
-                limit = Integer.valueOf(textField.getText());
-            }
-        });
+        vBox.getChildren().addAll(t1);
+        vBox.setAlignment(Pos.CENTER);
+        hBox1.getChildren().addAll(ready, goback);
+        hBox1.setAlignment(Pos.CENTER);
 
 
         ToggleGroup group = new ToggleGroup();
@@ -88,16 +67,14 @@ public class CreateRoom extends Application {
         Position botRight = new Position(10, 10);
 
         HashMap<Integer, Position> startingPositions = new HashMap<Integer, Position>();
-
-
-
-
         startingPositions.put(1, topLeft);
         startingPositions.put(2, topRight);
         startingPositions.put(3, botLeft);
         startingPositions.put(4, botRight);
 
-        hBox1.getChildren().addAll(tl, tr, bl, br);
+        hBox.getChildren().addAll(tl, tr, bl, br);
+        hBox.setAlignment(Pos.CENTER);
+
 
         group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals(tl)) {
@@ -112,7 +89,7 @@ public class CreateRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(1));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(tr)){
+            } else if (newValue.equals(tr)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(2))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -124,7 +101,7 @@ public class CreateRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(2));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(bl)){
+            } else if (newValue.equals(bl)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(3))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -136,7 +113,7 @@ public class CreateRoom extends Application {
                     StartingPositionPacket sPacket = new StartingPositionPacket(startingPositions.get(3));
                     c.sendObject(sPacket);
                 }
-            }else if(newValue.equals(br)){
+            } else if (newValue.equals(br)) {
                 if (ConnectionHandler.allPlayersPosition.containsValue(startingPositions.get(4))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -151,85 +128,46 @@ public class CreateRoom extends Application {
             }
         });
 
-
-        vBox.getChildren().addAll(t1, t2);
-        vBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(ready, goback);
-        hBox.setAlignment(Pos.CENTER);
-
-        cb.setTooltip(new Tooltip("Select player number"));
-
-        vBox1.getChildren().addAll(cb, hBox1);
-        vBox1.setAlignment(Pos.CENTER);
-
         ready.setOnAction(event -> {
-
-
+            stage.close();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(3000);
 
                 if (!c.getSocket().isClosed()) {
-                    // (Theo) This will set the limit of how many clients are able to connect to the
-                    // server.
-                    SettingPacket settingPacket = new SettingPacket(limit);
-                    c.sendObject(settingPacket);
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-
-            try {
-                Thread.sleep(2000);
-
-                if (!c.getSocket().isClosed()) {
-                    // (Theo) This add connection packet will register the connection to the server,
-                    // registering into the server's connected clients list.
-                    AddConnectionPacket packet = new AddConnectionPacket();
-                    c.sendObject(packet);
-
                     ConnectionHandler.allPlayersReadyStatus.put(ConnectionHandler.id, true);
                     ReadyPacket rpacket = new ReadyPacket(ConnectionHandler.id, true);
                     c.sendObject(rpacket);
-
-
-                    // select starting position
                 }
 
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            // avoid showing two windows at the same time
-            stage.close();
+            ready.setDisable(true);
         });
 
 
         goback.setOnAction(event -> {
             stage.close();
-            SelectModeMenu smm = new SelectModeMenu();
+            OnlineMenu om = new OnlineMenu();
             Stage st = new Stage();
-            smm.start(st);
+            om.start(st);
         });
 
 
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(vBox);
-        borderPane.setCenter(vBox1);
-        borderPane.setBottom(hBox);
+        borderPane.setCenter(hBox);
+        borderPane.setBottom(hBox1);
 
         Scene scene = new Scene(borderPane, 600, 400);
-        stage.setTitle("Room");
+        stage.setTitle("Join Room");
         stage.setScene(scene);
         stage.show();
-    }
 
+    }
 
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }
-
-

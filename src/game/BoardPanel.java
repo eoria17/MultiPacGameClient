@@ -27,7 +27,7 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 	private HashMap<Integer, Position> foods;
 
-	private Monster monster;
+	private Monster[] monsters;
 	private Grid grid;
 	private Graphics gr;
 	private final int CELLWIDTH = 40;
@@ -35,11 +35,11 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 	private final int LMARGIN = 100;
 	private final int TMARGIN = 100;
 
-	public BoardPanel(Grid g, HashMap<Integer, Player> players, Monster m) {
+	public BoardPanel(Grid g, HashMap<Integer, Player> players, Monster[] m) {
 		this.players = players;
 		player = players.get(ConnectionHandler.id);
 		grid = g;
-		monster = m;
+		monsters = m;
 		gr = this.getGraphics();
 
 		this.foods = ConnectionHandler.allFoodPosition;
@@ -103,12 +103,14 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 			gr.setColor(Color.white);
 		}
 
-		if (monster.viewable()) {
-			cell = monster.getCell();
-			gr.setColor(Color.black);
-			gr.fillRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
-			gr.setColor(Color.white);
-			gr.drawString("M", xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
+		for (Monster monster : monsters) {
+			if (monster.viewable()) {
+				cell = monster.getCell();
+				gr.setColor(Color.black);
+				gr.fillRect(xCor(cell.col), yCor(cell.row), CELLWIDTH, CELLHEIGHT);
+				gr.setColor(Color.white);
+				gr.drawString("M", xCor(cell.col) + CELLWIDTH / 3, yCor(cell.row) + 2 * CELLWIDTH / 3);
+			}
 		}
 	}
 
