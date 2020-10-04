@@ -200,6 +200,8 @@ public class CreateRoom extends Application {
                 e.printStackTrace();
             }
 
+            // avoid showing two windows at the same time
+            stage.close();
         });
 
 

@@ -29,7 +29,7 @@ public class Grid implements Serializable {
 		int k = 0;
 		for (int i = 0; i < numberOfRow; i++)
 			for (int j = 0; j < numberOfColumn; j++)
-				if (!isObstacle(i, j) || isPlayerPosition(i, j)) {
+				if (!isObstacle(j, i)|| isPlayerPosition(j, i)) {
 					cells2D[i][j] = new Position(i, j);
 					cells[k++] = cells2D[i][j];
 				}
@@ -42,7 +42,7 @@ public class Grid implements Serializable {
 		return totalCells - ConnectionHandler.gridObstacles.length;
 	}
 
-	
+
 	//Li
 		private boolean isPlayerPosition(int i, int j) {
 			for (Position p : ConnectionHandler.allPlayersPosition.values()) {
@@ -51,15 +51,15 @@ public class Grid implements Serializable {
 				}
 			}
 			return false;
-			
+
 		}
 
 	private boolean isObstacle(int i, int j) {
-	
+
 		if(isPlayerPosition(i,j)) {
 			return true;
-		}		
-		
+		}
+
 		if (ConnectionHandler.gridObstacles == null) {
 			return false;
 		}
@@ -124,8 +124,8 @@ public class Grid implements Serializable {
 			return false;
 
 	}
-	
-	
+
+
 
 	/*
 	 * returns the best direction from source cell to the target cell. Assumed cells
