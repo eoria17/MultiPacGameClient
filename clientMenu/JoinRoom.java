@@ -129,7 +129,7 @@ public class JoinRoom extends Application {
         });
 
         ready.setOnAction(event -> {
-            stage.close();
+            //stage.close();
             try {
                 Thread.sleep(3000);
 

@@ -126,7 +126,7 @@ public class JoinRoom extends Application {
         });
 
         ready.setOnAction(event -> {
-            stage.close();
+            //stage.close();
             try {
                 Thread.sleep(3000);
 
@@ -146,6 +146,7 @@ public class JoinRoom extends Application {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            ready.setDisable(true);
         });
 
         goback.setOnAction(event -> {
