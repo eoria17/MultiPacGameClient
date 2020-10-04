@@ -172,7 +172,7 @@ public class CreateRoom extends Application {
         vBox1.setAlignment(Pos.CENTER);
 
         ready.setOnAction(event -> {
-            stage.close();
+            //stage.close();
             try {
                 Thread.sleep(2000);
                 if (!c.getSocket().isClosed()) {
@@ -193,6 +193,8 @@ public class CreateRoom extends Application {
             }
             ready.setDisable(true);
 
+            // avoid showing two windows at the same time
+            //stage.close();
         });
 
 
