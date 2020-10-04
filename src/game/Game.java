@@ -111,7 +111,11 @@ public class Game extends JFrame {
 	 * is eaten up (player lost).
 	 */
 	public synchronized String play(Client c) {
-
+		
+		if(ConnectionHandler.deadPlayers.size() == ConnectionHandler.connections.size() - 1) {
+			String message = "Player wins";
+		}
+		
 		String message = "";
 
 		bp.requestFocusInWindow();
