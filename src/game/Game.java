@@ -140,6 +140,8 @@ public class Game extends JFrame {
 	public synchronized String play(Client c) {
 		
 		String message = "";
+		
+		int timeLeft = TIMEALLOWED - time;
 
 		bp.requestFocusInWindow();
 
@@ -149,7 +151,7 @@ public class Game extends JFrame {
 
 		// if the new position is the same as the old position then no need to send position package
 		// except for the first time
-		if (time == 0 || (oldPosition.getCol() != newPlayerCell.getCol() || oldPosition.getRow() != newPlayerCell.getRow())) {
+		if (timeLeft != 0 && (oldPosition.getCol() != newPlayerCell.getCol() || oldPosition.getRow() != newPlayerCell.getRow())) {
 			PlayerPositionPacket packet = new PlayerPositionPacket(ConnectionHandler.id, newPlayerCell);
 			c.sendObject(packet);
 		}
@@ -166,12 +168,13 @@ public class Game extends JFrame {
 			c.sendObject(fPacket);
 		}
 
-		int timeLeft = TIMEALLOWED - time;
+		
+		
 		if (timeLeft < 0) {
 			timeLeft = 0;
 		}
 		time++;
-		mLabel.setText("Time Remaining : " + timeLeft);
+//		mLabel.setText("Time Remaining : " + timeLeft);
 		bp.repaint();
 
 		if (timeLeft == 0) {
@@ -181,11 +184,13 @@ public class Game extends JFrame {
 
 		if (ConnectionHandler.deadPlayers.size() == ConnectionHandler.allPlayersReadyStatus.size()) {
 			message = "Player Lose";
+			time = TIMEALLOWED;
 			restart.setVisible(true);
 		} else if (ConnectionHandler.allPlayersReadyStatus.size() > 1 &&
 				(ConnectionHandler.allPlayersReadyStatus.size() - ConnectionHandler.deadPlayers.size() == 1)) {
 			// only one player left
 			message = "Player " + getWinnerID() + " Won";
+			time = TIMEALLOWED;
 			restart.setVisible(true);
 		}
 
