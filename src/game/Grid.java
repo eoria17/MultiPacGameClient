@@ -46,7 +46,7 @@ public class Grid implements Serializable {
 	//Li
 		private boolean isPlayerPosition(int i, int j) {
 			for (Position p : ConnectionHandler.allPlayersPosition.values()) {
-				if (i == p.col && j == p.row) {
+				if (p != null && i == p.col && j == p.row) {
 					return true;
 				}
 			}

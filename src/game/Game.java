@@ -185,11 +185,20 @@ public class Game extends JFrame {
 		} else if (ConnectionHandler.allPlayersReadyStatus.size() > 1 &&
 				(ConnectionHandler.allPlayersReadyStatus.size() - ConnectionHandler.deadPlayers.size() == 1)) {
 			// only one player left
-			message = "Player Won";
+			message = "Player " + getWinnerID() + " Won";
 			restart.setVisible(true);
 		}
 
 		mLabel.setText(message);
 		return message;
+	}
+
+	String getWinnerID() {
+		for (int id : ConnectionHandler.allPlayersReadyStatus.keySet()) {
+			if (!ConnectionHandler.deadPlayers.containsKey(id)) {
+				return String.valueOf(id + 1);
+			}
+		}
+		return "";
 	}
 }
