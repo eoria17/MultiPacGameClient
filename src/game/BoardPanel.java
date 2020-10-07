@@ -128,6 +128,12 @@ public class BoardPanel extends JPanel implements KeyEventHandler {
 			return;
 		}
 
+		// one player win the game
+		if (ConnectionHandler.allPlayersReadyStatus.size() > 1 &&
+				(ConnectionHandler.allPlayersReadyStatus.size() - ConnectionHandler.deadPlayers.size() == 1)) {
+			return;
+		}
+
 		if (keyCode.compareTo("up") == 0)
 			player.setDirection('U');
 		else if (keyCode.compareTo("down") == 0)

@@ -69,6 +69,7 @@ public class EventListener {
 				ConnectionHandler.rematchPlayers = new HashMap<>();
 				ConnectionHandler.monsterPosition = null;
 				ConnectionHandler.deadPlayers = new HashMap<>();
+				ConnectionHandler.allFoodPosition = new HashMap<>();
 				for (int i : ConnectionHandler.allPlayersReadyPosition.keySet()) {
 					ConnectionHandler.allPlayersPosition.put(i,
 							ConnectionHandler.allPlayersReadyPosition.get(i));
