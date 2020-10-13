@@ -46,7 +46,6 @@ public class MenuClient extends Application {
         });
 
 
-
         Scene scene = new Scene(borderPane, 800, 800);
         Pstage.setTitle("Welcome");
         Pstage.setScene(scene);
