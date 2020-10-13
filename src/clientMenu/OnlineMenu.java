@@ -17,7 +17,7 @@ public class OnlineMenu extends Application {
     public void start(Stage stage){
         VBox vBox = new VBox(50);
         Button cr = new Button("Create Room");
-        Button jr = new Button("Join Roon");
+        Button jr = new Button("Join Room");
         Button back = new Button("Go Back");
         vBox.getChildren().addAll(cr,jr,back);
         vBox.setAlignment(Pos.CENTER);
